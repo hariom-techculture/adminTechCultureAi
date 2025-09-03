@@ -1,0 +1,26 @@
+name: Deploy Admin to Droplet
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch: {}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Connect & deploy on droplet
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DO_HOST }}
+          username: ${{ secrets.DO_SSH_USER }}
+          key: ${{ secrets.DO_SSH_KEY }}
+          script: |
+            set -e
+            cd /var/www/admin
+            git fetch --all
+            git reset --hard origin/master
+            npm ci
+            npm run build
+            pm2 restart admin
+            pm2 save
