@@ -155,15 +155,17 @@ export function TechnologyForm({ technology, onClose }: TechnologyFormProps) {
 
   return (
     <ShowcaseSection
-      title={technology ? "Edit Technology Category" : "Add New Technology Category"}
-      className="!p-6.5 !mb-10"
+      title={
+        technology ? "Edit Technology Category" : "Add New Technology Category"
+      }
+      className="!mb-10 !p-6.5"
     >
       <form onSubmit={handleSubmit}>
         <div className="mb-4.5">
           <label className="mb-2.5 block text-black dark:text-white">
             Category Key
           </label>
-          
+
           {!showCustomCategory ? (
             <div className="space-y-3">
               <select
@@ -171,12 +173,15 @@ export function TechnologyForm({ technology, onClose }: TechnologyFormProps) {
                 onChange={(e) => {
                   if (e.target.value === "custom") {
                     setShowCustomCategory(true);
-                    setFormData(prev => ({ ...prev, categoryKey: "" }));
+                    setFormData((prev) => ({ ...prev, categoryKey: "" }));
                   } else {
-                    setFormData(prev => ({ ...prev, categoryKey: e.target.value }));
+                    setFormData((prev) => ({
+                      ...prev,
+                      categoryKey: e.target.value,
+                    }));
                   }
                 }}
-                className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                className="disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default dark:text-white dark:focus:border-primary"
                 required
               >
                 <option value="">Select existing category or create new</option>
@@ -187,9 +192,9 @@ export function TechnologyForm({ technology, onClose }: TechnologyFormProps) {
                 ))}
                 <option value="custom">+ Add New Category</option>
               </select>
-              
-              <p className="text-sm text-body-color dark:text-body-color-dark">
-                Select an existing category or choose "Add New Category" to create a custom one
+
+              <p className="text-body-color dark:text-body-color-dark text-sm">
+                Select an existing category or choose &quot;Add New Category&quot; to create a custom one
               </p>
             </div>
           ) : (
@@ -200,7 +205,7 @@ export function TechnologyForm({ technology, onClose }: TechnologyFormProps) {
                   placeholder="Enter unique category key (e.g., frontend, backend)"
                   value={customCategoryKey}
                   onChange={(e) => setCustomCategoryKey(e.target.value)}
-                  className="flex-1 rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                  className="disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input flex-1 rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default dark:text-white dark:focus:border-primary"
                   required
                 />
                 <button
@@ -208,15 +213,15 @@ export function TechnologyForm({ technology, onClose }: TechnologyFormProps) {
                   onClick={() => {
                     setShowCustomCategory(false);
                     setCustomCategoryKey("");
-                    setFormData(prev => ({ ...prev, categoryKey: "" }));
+                    setFormData((prev) => ({ ...prev, categoryKey: "" }));
                   }}
-                  className="rounded border border-stroke px-4 py-3 text-dark hover:bg-gray-1 dark:border-strokedark dark:text-white dark:hover:bg-meta-4"
+                  className="dark:border-strokedark dark:hover:bg-meta-4 rounded border border-stroke px-4 py-3 text-dark hover:bg-gray-1 dark:text-white"
                 >
                   Cancel
                 </button>
               </div>
-              
-              <p className="text-sm text-body-color dark:text-body-color-dark">
+
+              <p className="text-body-color dark:text-body-color-dark text-sm">
                 Enter a unique key for the new technology category
               </p>
             </div>
@@ -239,7 +244,7 @@ export function TechnologyForm({ technology, onClose }: TechnologyFormProps) {
           <label className="mb-2.5 block text-black dark:text-white">
             Technology Items
           </label>
-          
+
           {/* Add new item */}
           <div className="mb-4 flex gap-2">
             <input
@@ -247,8 +252,10 @@ export function TechnologyForm({ technology, onClose }: TechnologyFormProps) {
               placeholder="Enter technology name (e.g., React, Node.js)"
               value={newItemName}
               onChange={(e) => setNewItemName(e.target.value)}
-              onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), handleAddItem())}
-              className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+              onKeyPress={(e) =>
+                e.key === "Enter" && (e.preventDefault(), handleAddItem())
+              }
+              className="disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default dark:text-white dark:focus:border-primary"
             />
             <button
               type="button"
@@ -262,7 +269,10 @@ export function TechnologyForm({ technology, onClose }: TechnologyFormProps) {
           {/* Display items */}
           <div className="space-y-2">
             {formData.items.map((item, index) => (
-              <div key={index} className="flex items-center gap-2 rounded-lg border border-stroke p-3 dark:border-strokedark">
+              <div
+                key={index}
+                className="dark:border-strokedark flex items-center gap-2 rounded-lg border border-stroke p-3"
+              >
                 <input
                   type="text"
                   value={item.name}
@@ -272,15 +282,15 @@ export function TechnologyForm({ technology, onClose }: TechnologyFormProps) {
                 <button
                   type="button"
                   onClick={() => handleRemoveItem(index)}
-                  className="text-red-500 hover:text-red-700 px-2 py-1"
+                  className="px-2 py-1 text-red-500 hover:text-red-700"
                 >
                   ✕
                 </button>
               </div>
             ))}
-            
+
             {formData.items.length === 0 && (
-              <p className="text-body-sm text-dark-6 italic">
+              <p className="text-body-sm italic text-dark-6">
                 No technology items added yet. Add some items above.
               </p>
             )}
@@ -292,7 +302,7 @@ export function TechnologyForm({ technology, onClose }: TechnologyFormProps) {
             type="button"
             onClick={onClose}
             disabled={isSubmitting}
-            className="flex justify-center rounded-lg border border-stroke px-6 py-[7px] font-medium text-dark hover:shadow-1 dark:border-dark-3 dark:text-white disabled:opacity-70"
+            className="flex justify-center rounded-lg border border-stroke px-6 py-[7px] font-medium text-dark hover:shadow-1 disabled:opacity-70 dark:border-dark-3 dark:text-white"
           >
             Cancel
           </button>
@@ -303,9 +313,25 @@ export function TechnologyForm({ technology, onClose }: TechnologyFormProps) {
           >
             {isSubmitting ? (
               <div className="flex items-center">
-                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                <svg
+                  className="-ml-1 mr-3 h-5 w-5 animate-spin text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
                 </svg>
                 Saving...
               </div>
