@@ -84,11 +84,7 @@ export default function ContactForm() {
 
   // ✅ Handle client logo add
   const handleClientLogoAdd = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    if (clientLogos.length + files.length + existingClients.length > 10) {
-      setError("Maximum 10 client logos allowed");
-      return;
-    }
+    const files = Array.from(e.target.files || []);  
     setClientLogos((prev) => [...prev, ...files]);
     setError("");
   };

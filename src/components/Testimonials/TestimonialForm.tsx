@@ -15,6 +15,7 @@ interface TestimonialFormProps {
     title: string;
     message: string;
     image?: string;
+    backgroundImage?: string;
   } | null;
   onClose: () => void;
 }
@@ -25,8 +26,10 @@ export function TestimonialForm({ testimonial, onClose }: TestimonialFormProps) 
     title: testimonial?.title || "",
     message: testimonial?.message || "",
     image: null as File | null,
+    backgroundImage: null as File | null,
   }));
   const [previewUrl, setPreviewUrl] = useState<string | null>(testimonial?.image || null);
+  const [backgroundPreviewUrl, setBackgroundPreviewUrl] = useState<string | null>(testimonial?.backgroundImage || null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Reset form when testimonial prop changes
@@ -36,8 +39,10 @@ export function TestimonialForm({ testimonial, onClose }: TestimonialFormProps) 
       title: testimonial?.title || "",
       message: testimonial?.message || "",
       image: null,
+      backgroundImage: null,
     });
     setPreviewUrl(testimonial?.image || null);
+    setBackgroundPreviewUrl(testimonial?.backgroundImage || null);
   }, [testimonial]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -54,7 +59,10 @@ export function TestimonialForm({ testimonial, onClose }: TestimonialFormProps) 
       formDataToSend.append("title", formData.title);
       formDataToSend.append("message", formData.message);
       if (formData.image) {
-        formDataToSend.append("file", formData.image);
+        formDataToSend.append("image", formData.image);
+      }
+      if (formData.backgroundImage) {
+        formDataToSend.append("backgroundImage", formData.backgroundImage);
       }
 
       const url = testimonial?._id
@@ -101,6 +109,23 @@ export function TestimonialForm({ testimonial, onClose }: TestimonialFormProps) 
       // Create preview URL for the selected image
       const url = URL.createObjectURL(file);
       setPreviewUrl(url);
+
+      // Cleanup previous preview URL
+      return () => URL.revokeObjectURL(url);
+    }
+  };
+
+  const handleBackgroundFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setFormData((prev) => ({
+        ...prev,
+        backgroundImage: file,
+      }));
+
+      // Create preview URL for the selected background image
+      const url = URL.createObjectURL(file);
+      setBackgroundPreviewUrl(url);
 
       // Cleanup previous preview URL
       return () => URL.revokeObjectURL(url);
@@ -172,6 +197,36 @@ export function TestimonialForm({ testimonial, onClose }: TestimonialFormProps) 
               {testimonial?.image && (
                 <p className="text-body-sm text-dark-6">
                   Current image will be replaced when you save
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+
+        <div className="mb-4.5">
+          <InputGroup
+            label="Background Image (Optional)"
+            type="file"
+            placeholder="Upload background image"
+            fileStyleVariant="style1"
+            required={false}
+            accept="image/*"
+            handleChange={handleBackgroundFileChange}
+          />
+          
+          {backgroundPreviewUrl && (
+            <div className="mt-3">
+              <div className="relative mb-2 w-32 h-20">
+                <Image 
+                  src={backgroundPreviewUrl} 
+                  alt="Selected background image preview"
+                  fill
+                  className="rounded-lg object-cover"
+                />
+              </div>
+              {testimonial?.backgroundImage && (
+                <p className="text-body-sm text-dark-6">
+                  Current background image will be replaced when you save
                 </p>
               )}
             </div>
