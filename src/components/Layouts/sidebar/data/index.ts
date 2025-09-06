@@ -78,6 +78,12 @@ export const NAV_DATA = [
         items: [],
       },
       {
+        title: "FAQs",
+        url: "/faqs",
+        icon: Icons.faq,
+        items: [],
+      },
+      {
         title: "Customer Reviews",
         url: "/customer-reviews",
         icon: Icons.customer,

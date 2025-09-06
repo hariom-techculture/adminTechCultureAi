@@ -24,8 +24,11 @@ export default function ProjectsPage() {
     technologies: [] as string[],
     status: 'ongoing' as 'ongoing' | 'completed',
     file: null as File | null,
+    portfolioImages: [] as File[],
   });
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [portfolioPreviewUrls, setPortfolioPreviewUrls] = useState<string[]>([]);
+  const [existingPortfolioUrls, setExistingPortfolioUrls] = useState<string[]>([]);
   const [techInput, setTechInput] = useState('');
   const [isMounted, setIsMounted] = useState(false);
 
@@ -62,6 +65,49 @@ export default function ProjectsPage() {
     }
   };
 
+  const handlePortfolioImagesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const files = Array.from(e.target.files);
+      setFormData(prev => ({
+        ...prev,
+        portfolioImages: [...prev.portfolioImages, ...files],
+      }));
+
+      const newUrls = files.map(file => URL.createObjectURL(file));
+      setPortfolioPreviewUrls(prev => [...prev, ...newUrls]);
+    }
+  };
+
+  const removePortfolioImage = (index: number) => {
+    const urlToRemove = portfolioPreviewUrls[index];
+    
+    // Check if this is an existing image or a new file
+    const existingIndex = existingPortfolioUrls.indexOf(urlToRemove);
+    if (existingIndex !== -1) {
+      // Remove from existing images
+      setExistingPortfolioUrls(prev => prev.filter((_, i) => i !== existingIndex));
+    } else {
+      // Find and remove from new file uploads
+      const newFileIndex = portfolioPreviewUrls.slice(existingPortfolioUrls.length).indexOf(urlToRemove);
+      if (newFileIndex !== -1) {
+        setFormData(prev => ({
+          ...prev,
+          portfolioImages: prev.portfolioImages.filter((_, i) => i !== newFileIndex)
+        }));
+      }
+    }
+    
+    // Remove from preview URLs
+    setPortfolioPreviewUrls(prev => {
+      const newUrls = prev.filter((_, i) => i !== index);
+      // Revoke URL if it's a blob URL
+      if (urlToRemove?.startsWith('blob:')) {
+        URL.revokeObjectURL(urlToRemove);
+      }
+      return newUrls;
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const promise = new Promise(async (resolve, reject) => {
@@ -75,6 +121,16 @@ export default function ProjectsPage() {
         data.append('technologies', JSON.stringify(formData.technologies));
         if (formData.file) {
           data.append('file', formData.file);
+        }
+        
+        // Append portfolio images
+        formData.portfolioImages.forEach((file) => {
+          data.append('portfolioImages', file);
+        });
+        
+        // Send existing portfolio images to preserve them when editing
+        if (editingProject && existingPortfolioUrls.length > 0) {
+          data.append('existingPortfolioImages', JSON.stringify(existingPortfolioUrls));
         }
 
         const url = editingProject
@@ -143,8 +199,11 @@ export default function ProjectsPage() {
       technologies: [],
       status: 'ongoing',
       file: null,
+      portfolioImages: [],
     });
     setPreviewUrl(null);
+    setPortfolioPreviewUrls([]);
+    setExistingPortfolioUrls([]);
     setEditingProject(null);
     setIsFormOpen(false);
     setTechInput('');
@@ -160,8 +219,12 @@ export default function ProjectsPage() {
       technologies: project.technologies,
       status: project.status,
       file: null,
+      portfolioImages: [],
     });
     setPreviewUrl(project.image);
+    const existingImages = project.portfolioImages || [];
+    setExistingPortfolioUrls(existingImages);
+    setPortfolioPreviewUrls(existingImages);
     setIsFormOpen(true);
   };
 
@@ -346,6 +409,41 @@ export default function ProjectsPage() {
                       />
                     </div>
                   )}
+
+                  <div className="space-y-4">
+                    <label className="mb-3 block text-black dark:text-white">
+                      Portfolio Images (Optional)
+                    </label>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      onChange={handlePortfolioImagesChange}
+                      className="dark:border-strokedark w-full rounded-lg border border-stroke bg-transparent px-4 py-2 outline-none focus:border-primary"
+                    />
+                    
+                    {portfolioPreviewUrls.length > 0 && (
+                      <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+                        {portfolioPreviewUrls.map((url, index) => (
+                          <div key={index} className="relative aspect-video">
+                            <Image
+                              src={url}
+                              alt={`Portfolio ${index + 1}`}
+                              fill
+                              className="rounded-lg object-cover"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => removePortfolioImage(index)}
+                              className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-white text-sm hover:bg-red-600"
+                            >
+                              ×
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
 
                   <div className="flex justify-end gap-3">
                     <button
