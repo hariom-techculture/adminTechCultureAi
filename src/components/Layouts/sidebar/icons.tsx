@@ -1,5 +1,5 @@
 import { Users } from "@/app/(dashboard)/(home)/_components/overview-cards/icons";
-import { Briefcase, Cpu, FileQuestionMark, FolderKanban, Headset, Image, MessageCircleCode, MessageCircleReply, Settings, UsersRound } from "lucide-react";
+import { Briefcase, Cpu, FileQuestionMark, FolderKanban, Headset, Image, MessageCircleCode, MessageCircleReply, Podcast, Settings, UsersRound } from "lucide-react";
 import { SVGProps } from "react";
 
 export type PropsType = SVGProps<SVGSVGElement>;
@@ -235,4 +235,7 @@ export function slider(props: PropsType) {
 }
 export function faq(props: PropsType) {
   return <FileQuestionMark />;
+}
+export function subscriber(props: PropsType) {
+  return <Podcast />;
 }

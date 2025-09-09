@@ -38,13 +38,14 @@ interface TeamFormProps {
 }
 
 export function TeamForm({ member, onClose }: TeamFormProps) {
+  console.log("Editing member:", member);
   const {token} = useAuth();
   const [formData, setFormData] = useState(() => ({
     name: member?.name || "",
     description: member?.description || "",
     designation: member?.designation || "",
     department: member?.department || "",
-    socialLinks: member?.socialLinks || ["", "", ""],
+    socialLinks: member?.socialLinks && member.socialLinks.length > 0 ? member.socialLinks : ["", "", ""],
   }));
   const [previewUrl, setPreviewUrl] = useState<string | null>(member?.profilePicture || null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -55,7 +56,10 @@ export function TeamForm({ member, onClose }: TeamFormProps) {
       description: member?.description || "",
       designation: member?.designation || "",
       department: member?.department || "",
-      socialLinks: member?.socialLinks || ["", "", ""],
+      socialLinks:
+        member?.socialLinks && member.socialLinks.length > 0
+          ? member.socialLinks
+          : ["", "", ""],
     });
     setPreviewUrl(member?.profilePicture || null);
   }, [member]);
@@ -140,9 +144,12 @@ export function TeamForm({ member, onClose }: TeamFormProps) {
   return (
     <ShowcaseSection
       title={member ? "Edit Team Member" : "Add Team Member"}
-      className="!p-6.5 !mb-10"
+      className="!mb-10 !p-6.5"
     >
-      <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <form
+        onSubmit={handleSubmit}
+        className="grid grid-cols-1 gap-4 md:grid-cols-2"
+      >
         <div className="space-y-4 md:col-span-1">
           <InputGroup
             label="Name"
@@ -171,7 +178,7 @@ export function TeamForm({ member, onClose }: TeamFormProps) {
               Department
             </label>
             <select
-              className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+              className="disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default dark:focus:border-primary"
               value={formData.department}
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, department: e.target.value }))
@@ -206,9 +213,9 @@ export function TeamForm({ member, onClose }: TeamFormProps) {
             {formData.socialLinks.map((link, index) => (
               <InputGroup
                 key={index}
-                label={`Social Link ${index + 1}`}
+                label={`${index === 0 ? "LinkedIn" : index === 1 ? "Twitter" : "Instagram"}`}
                 type="url"
-                placeholder={`Enter social media link ${index + 1}`}
+                placeholder={`Enter ${index === 0 ? "LinkedIn" : index === 1 ? "Twitter" : "Instagram"} link`}
                 value={link}
                 handleChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   handleSocialLinkChange(index, e.target.value)
@@ -229,12 +236,12 @@ export function TeamForm({ member, onClose }: TeamFormProps) {
               accept="image/*"
               handleChange={handleFileChange}
             />
-            
+
             {previewUrl && (
               <div className="mt-3">
                 <div className="relative h-40 w-40 overflow-hidden rounded-lg">
-                  <Image 
-                    src={previewUrl} 
+                  <Image
+                    src={previewUrl}
                     alt="Profile picture preview"
                     fill
                     className="object-cover"
@@ -255,7 +262,7 @@ export function TeamForm({ member, onClose }: TeamFormProps) {
             type="button"
             onClick={onClose}
             disabled={isSubmitting}
-            className="flex justify-center rounded-lg border border-stroke px-6 py-2.5 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white disabled:opacity-70"
+            className="dark:border-strokedark flex justify-center rounded-lg border border-stroke px-6 py-2.5 font-medium text-black hover:shadow-1 disabled:opacity-70 dark:text-white"
           >
             Cancel
           </button>
@@ -266,9 +273,25 @@ export function TeamForm({ member, onClose }: TeamFormProps) {
           >
             {isSubmitting ? (
               <div className="flex items-center">
-                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                <svg
+                  className="-ml-1 mr-3 h-5 w-5 animate-spin text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
                 </svg>
                 Saving...
               </div>

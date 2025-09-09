@@ -96,7 +96,7 @@ export function TeamList({ onEdit }: TeamListProps) {
       {members.map((member) => (
         <div
           key={member._id}
-          className="rounded-sm border border-stroke bg-white p-4 shadow-default dark:border-strokedark dark:bg-boxdark"
+          className="dark:border-strokedark dark:bg-boxdark rounded-sm border border-stroke bg-white p-4 shadow-default"
         >
           <div className="flex items-center gap-4">
             <div className="relative h-20 w-20 overflow-hidden rounded-full">
@@ -109,7 +109,11 @@ export function TeamList({ onEdit }: TeamListProps) {
                 />
               ) : (
                 <div className="flex h-full w-full items-center justify-center bg-gray-100 text-gray-400">
-                  <svg className="h-12 w-12" fill="currentColor" viewBox="0 0 24 24">
+                  <svg
+                    className="h-12 w-12"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
                     <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
                   </svg>
                 </div>
@@ -132,21 +136,78 @@ export function TeamList({ onEdit }: TeamListProps) {
 
           {member.socialLinks.length > 0 && (
             <div className="mt-4 flex gap-3">
-              {member.socialLinks.map((link, index) => (
-                link && (
-                  <a
-                    key={index}
-                    href={link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-400 hover:text-primary"
-                  >
-                    <svg className="h-5 w-5 fill-current" viewBox="0 0 24 24">
-                      <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-2 16h-2v-6h2v6zm-1-6.891c-.607 0-1.1-.496-1.1-1.109 0-.612.492-1.109 1.1-1.109s1.1.497 1.1 1.109c0 .613-.493 1.109-1.1 1.109zm8 6.891h-1.998v-2.861c0-1.881-2.002-1.722-2.002 0v2.861h-2v-6h2v1.093c.872-1.616 4-1.736 4 1.548v3.359z"/>
-                    </svg>
-                  </a>
-                )
-              ))}
+              {member.socialLinks.map(
+                (link, index) =>
+                  link && (
+                    <a
+                      key={index}
+                      href={link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gray-400 hover:text-primary"
+                    >
+                      {index == 0 && (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          className="lucide lucide-linkedin-icon lucide-linkedin h-5 w-5"
+                        >
+                          <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+                          <rect width="4" height="12" x="2" y="9" />
+                          <circle cx="4" cy="4" r="2" />
+                        </svg>
+                      )}
+                      {index == 1 && (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 50 50"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          className="h-5 w-5"
+                        >
+                          <path d="M 5.9199219 6 L 20.582031 27.375 L 6.2304688 44 L 9.4101562 44 L 21.986328 29.421875 L 31.986328 44 L 44 44 L 28.681641 21.669922 L 42.199219 6 L 39.029297 6 L 27.275391 19.617188 L 17.933594 6 L 5.9199219 6 z M 9.7167969 8 L 16.880859 8 L 40.203125 42 L 33.039062 42 L 9.7167969 8 z"></path>
+                        </svg>
+                      )}
+                      {index == 2 && (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          className="lucide lucide-instagram-icon lucide-instagram h-5 w-5"
+                        >
+                          <rect
+                            width="20"
+                            height="20"
+                            x="2"
+                            y="2"
+                            rx="5"
+                            ry="5"
+                          />
+                          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                          <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+                        </svg>
+                      )}
+                    </a>
+                  ),
+              )}
             </div>
           )}
 

@@ -90,6 +90,12 @@ export const NAV_DATA = [
         items: [],
       },
       {
+        title: "Subscribers",
+        url: "/subscribers",
+        icon: Icons.subscriber,
+        items: [],
+      },
+      {
         title: "Contact Us",
         url: "/contact-us",
         icon: Icons.contact,
