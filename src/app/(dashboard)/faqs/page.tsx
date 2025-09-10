@@ -186,121 +186,126 @@ export default function FAQsPage() {
             </button>
           </div>
 
-          {isFormOpen && isMounted && createPortal(
-            <div 
-              className="fixed inset-0 z-[999] flex items-center justify-center bg-black bg-opacity-50 p-4" 
-              style={{ zIndex: 9999 }}
-              onClick={(e) => {
-                if (e.target === e.currentTarget) {
-                  resetForm();
-                }
-              }}
-            >
-              <div className="dark:bg-boxdark max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-6 shadow-2xl">
-                <h3 className="mb-4 text-xl font-semibold text-black dark:text-white">
-                  {editingFAQ ? "Edit FAQ" : "Add New FAQ"}
-                </h3>
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <InputGroup
-                    label="Question"
-                    type="text"
-                    placeholder="Enter the question"
-                    required
-                    value={formData.question}
-                    handleChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        question: e.target.value,
-                      }))
-                    }
-                  />
-
-                  <TextAreaGroup
-                    label="Answer"
-                    placeholder="Enter the answer"
-                    required
-                    value={formData.answer}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        answer: e.target.value,
-                      }))
-                    }
-                  />
-
-                  <div className="space-y-2">
-                    <label className="mb-3 block text-black dark:text-white">
-                      Category
-                    </label>
-                    <select
-                      value={formData.category}
-                      onChange={(e) =>
+          {isFormOpen &&
+            isMounted &&
+            createPortal(
+              <div
+                className="fixed inset-0 z-[999] flex items-center justify-center bg-black bg-opacity-50 p-4"
+                style={{ zIndex: 9999 }}
+                onClick={(e) => {
+                  if (e.target === e.currentTarget) {
+                    resetForm();
+                  }
+                }}
+              >
+                <div className="dark:bg-boxdark max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-6 shadow-2xl">
+                  <h3 className="mb-4 text-xl font-semibold text-black dark:text-white">
+                    {editingFAQ ? "Edit FAQ" : "Add New FAQ"}
+                  </h3>
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    <InputGroup
+                      label="Question"
+                      type="text"
+                      placeholder="Enter the question"
+                      required
+                      value={formData.question}
+                      handleChange={(e) =>
                         setFormData((prev) => ({
                           ...prev,
-                          category: e.target.value,
+                          question: e.target.value,
                         }))
                       }
-                      className="dark:border-strokedark w-full rounded-lg border border-stroke bg-transparent px-4 py-2 outline-none focus:border-primary"
-                    >
-                      {categories.map((cat) => (
-                        <option key={cat} value={cat}>
-                          {cat}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <InputGroup
-                    label="Order"
-                    type="number"
-                    placeholder="Enter display order"
-                    value={formData.order.toString()}
-                    handleChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        order: parseInt(e.target.value) || 0,
-                      }))
-                    }
-                  />
-
-                  <div className="flex items-center space-x-2">
-                    <input
-                      type="checkbox"
-                      id="isActive"
-                      checked={formData.isActive}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          isActive: e.target.checked,
-                        }))
-                      }
-                      className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
                     />
-                    <label htmlFor="isActive" className="text-black dark:text-white">
-                      Active
-                    </label>
-                  </div>
 
-                  <div className="flex justify-end gap-3">
-                    <button
-                      type="button"
-                      onClick={resetForm}
-                      className="rounded-lg border border-gray-300 px-6 py-2 hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-700"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      className="rounded-lg bg-primary px-6 py-2 text-white hover:bg-opacity-90"
-                    >
-                      {editingFAQ ? "Update" : "Create"} FAQ
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>,
-            document.body
-          )}
+                    <TextAreaGroup
+                      label="Answer"
+                      placeholder="Enter the answer"
+                      required
+                      value={formData.answer}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          answer: e.target.value,
+                        }))
+                      }
+                    />
+
+                    <div className="space-y-2">
+                      <label className="mb-3 block text-black dark:text-white">
+                        Category
+                      </label>
+                      <select
+                        value={formData.category}
+                        onChange={(e) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            category: e.target.value,
+                          }))
+                        }
+                        className="dark:border-strokedark w-full rounded-lg border border-stroke bg-transparent px-4 py-2 outline-none focus:border-primary"
+                      >
+                        {categories.map((cat) => (
+                          <option key={cat} value={cat}>
+                            {cat}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <InputGroup
+                      label="Order"
+                      type="number"
+                      placeholder="Enter display order"
+                      value={formData.order.toString()}
+                      handleChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          order: parseInt(e.target.value) || 0,
+                        }))
+                      }
+                    />
+
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        id="isActive"
+                        checked={formData.isActive}
+                        onChange={(e) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            isActive: e.target.checked,
+                          }))
+                        }
+                        className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                      />
+                      <label
+                        htmlFor="isActive"
+                        className="text-black dark:text-white"
+                      >
+                        Active
+                      </label>
+                    </div>
+
+                    <div className="flex justify-end gap-3">
+                      <button
+                        type="button"
+                        onClick={resetForm}
+                        className="rounded-lg border border-gray-300 px-6 py-2 hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-700"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        className="rounded-lg bg-primary px-6 py-2 text-white hover:bg-opacity-90"
+                      >
+                        {editingFAQ ? "Update" : "Create"} FAQ
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>,
+              document.body,
+            )}
 
           {loading ? (
             <div className="flex h-64 items-center justify-center">
@@ -310,7 +315,7 @@ export default function FAQsPage() {
             <div className="overflow-x-auto">
               <table className="w-full table-auto">
                 <thead>
-                  <tr className="bg-gray-2 text-left dark:bg-meta-4">
+                  <tr className="dark:bg-meta-4 bg-gray-2 text-left">
                     <th className="min-w-[220px] px-4 py-4 font-medium text-black dark:text-white xl:pl-11">
                       Question
                     </th>
@@ -331,41 +336,44 @@ export default function FAQsPage() {
                 <tbody>
                   {faqs.map((faq) => (
                     <tr key={faq._id}>
-                      <td className="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
+                      <td className="dark:border-strokedark border-b border-[#eee] px-4 py-5 pl-9 xl:pl-11">
                         <h5 className="font-medium text-black dark:text-white">
                           {faq.question}
                         </h5>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 line-clamp-2">
+                        <p className="mt-1 line-clamp-2 text-sm text-gray-600 dark:text-gray-400">
                           {faq.answer}
                         </p>
                       </td>
-                      <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
-                        <span className="inline-flex rounded-full bg-opacity-10 px-3 py-1 text-sm font-medium bg-primary text-primary">
+                      <td className="dark:border-strokedark border-b border-[#eee] px-4 py-5">
+                        <span className="inline-flex rounded-full bg-primary bg-opacity-10 px-3 py-1 text-sm font-medium text-primary">
                           {faq.category}
                         </span>
                       </td>
-                      <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                      <td className="dark:border-strokedark border-b border-[#eee] px-4 py-5">
                         <button
                           onClick={() => toggleStatus(faq)}
                           className={`inline-flex rounded-full bg-opacity-10 px-3 py-1 text-sm font-medium ${
                             faq.isActive
-                              ? 'bg-success text-success'
-                              : 'bg-warning text-warning'
+                              ? "bg-success text-success"
+                              : "bg-warning text-warning"
                           }`}
                         >
-                          {faq.isActive ? 'Active' : 'Inactive'}
+                          {faq.isActive ? "Active" : "Inactive"}
                         </button>
                       </td>
-                      <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
-                        <p className="text-black dark:text-white">{faq.order}</p>
+                      <td className="dark:border-strokedark border-b border-[#eee] px-4 py-5">
+                        <p className="text-black dark:text-white">
+                          {faq.order}
+                        </p>
                       </td>
-                      <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
-                        <div className="flex items-center space-x-3.5">
+                      <td className="dark:border-strokedark border-b border-[#eee] px-4 py-5">
+                        <div className="flex  items-center gap-2">
                           <button
                             onClick={() => handleEdit(faq)}
-                            className="hover:text-primary"
+                            className="inline-flex items-center justify-center rounded-md border border-primary px-4 py-2 text-sm font-medium text-primary hover:bg-primary hover:text-white"
                           >
-                            <svg
+                            Edit
+                            {/* <svg
                               className="fill-current"
                               width="18"
                               height="18"
@@ -373,13 +381,14 @@ export default function FAQsPage() {
                             >
                               <path d="M8.99981 14.8219C3.43106 14.8219 0.674805 9.50624 0.562305 9.28124C0.47793 9.11249 0.47793 8.88749 0.562305 8.71874C0.674805 8.49374 3.43106 3.20624 8.99981 3.20624C14.5686 3.20624 17.3248 8.49374 17.4373 8.71874C17.5217 8.88749 17.5217 9.11249 17.4373 9.28124C17.3248 9.50624 14.5686 14.8219 8.99981 14.8219ZM1.85605 8.99999C2.4748 10.0406 4.89356 13.2031 8.99981 13.2031C13.1061 13.2031 15.5248 10.0406 16.1436 8.99999C15.5248 7.95936 13.1061 4.79686 8.99981 4.79686C4.89356 4.79686 2.4748 7.95936 1.85605 8.99999Z" />
                               <path d="M9 11.3906C7.67812 11.3906 6.60938 10.3219 6.60938 9C6.60938 7.67813 7.67812 6.60938 9 6.60938C10.3219 6.60938 11.3906 7.67813 11.3906 9C11.3906 10.3219 10.3219 11.3906 9 11.3906ZM9 7.875C8.38125 7.875 7.875 8.38125 7.875 9C7.875 9.61875 8.38125 10.125 9 10.125C9.61875 10.125 10.125 9.61875 10.125 9C10.125 8.38125 9.61875 7.875 9 7.875Z" />
-                            </svg>
+                            </svg> */}
                           </button>
                           <button
                             onClick={() => handleDelete(faq._id)}
-                            className="hover:text-red-500"
+                            className="inline-flex items-center justify-center rounded-md border border-red-500 px-4 py-2 text-sm font-medium text-red-500 hover:bg-red-500 hover:text-white"
                           >
-                            <svg
+                            Delete
+                            {/* <svg
                               className="fill-current"
                               width="18"
                               height="18"
@@ -389,7 +398,7 @@ export default function FAQsPage() {
                               <path d="M9.00039 9.11255C8.66289 9.11255 8.35352 9.3938 8.35352 9.75942V13.3313C8.35352 13.6688 8.63477 13.9782 9.00039 13.9782C9.33789 13.9782 9.64727 13.6969 9.64727 13.3313V9.75942C9.64727 9.3938 9.33789 9.11255 9.00039 9.11255Z" />
                               <path d="M11.2502 9.67504C10.8846 9.64692 10.6033 9.90004 10.5752 10.2657L10.4064 12.7407C10.3783 13.0782 10.6314 13.3875 10.9971 13.4157C11.0252 13.4157 11.0252 13.4157 11.0533 13.4157C11.3908 13.4157 11.6721 13.1625 11.6721 12.825L11.8408 10.35C11.8408 9.98442 11.5877 9.70317 11.2502 9.67504Z" />
                               <path d="M6.72245 9.67504C6.38495 9.70317 6.1037 10.0125 6.13182 10.35L6.3287 12.825C6.35683 13.1625 6.63808 13.4157 6.94745 13.4157C6.97558 13.4157 6.97558 13.4157 7.0037 13.4157C7.34120 13.3875 7.62245 13.0782 7.59433 12.7407L7.39745 10.2657C7.39745 9.90004 7.08808 9.64692 6.72245 9.67504Z" />
-                            </svg>
+                            </svg> */}
                           </button>
                         </div>
                       </td>
@@ -400,7 +409,9 @@ export default function FAQsPage() {
 
               {faqs.length === 0 && (
                 <div className="flex h-32 items-center justify-center">
-                  <p className="text-gray-500 dark:text-gray-400">No FAQs found. Create your first FAQ!</p>
+                  <p className="text-gray-500 dark:text-gray-400">
+                    No FAQs found. Create your first FAQ!
+                  </p>
                 </div>
               )}
             </div>
