@@ -4,7 +4,11 @@ export interface Project {
   description: string;
   image: string;
   portfolioImages?: string[];
-  category: string;
+  category: {
+    _id: string;
+    name: string;
+    image: string;
+  };
   location?: string;
   technologies: string[];
   status: 'ongoing' | 'completed';
