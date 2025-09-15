@@ -146,7 +146,7 @@ export default function ServicesPage() {
     const promise = new Promise(async (resolve, reject) => {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/service/${id}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/api/services/${id}`,
           {
             method: "DELETE",
             headers: {
