@@ -290,6 +290,9 @@ export default function EnquiryPage() {
                       Contact
                     </th>
                     <th className="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
+                      Project Name
+                    </th>
+                    <th className="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
                       Message
                     </th>
                     <th className="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
@@ -320,6 +323,11 @@ export default function EnquiryPage() {
                             {enquiry.email}
                           </p>
                         </div>
+                      </td>
+                      <td className="dark:border-strokedark border-b border-[#eee] px-4 py-5">
+                        <p className="text-black dark:text-white">
+                          {enquiry.projectName || "General"}
+                        </p>
                       </td>
                       <td className="dark:border-strokedark border-b border-[#eee] px-4 py-5">
                         <p className="text-black dark:text-white">
@@ -380,113 +388,116 @@ export default function EnquiryPage() {
           </div>
 
           {/* Contact Details Modal */}
-          {showDetails && selectedContact && isMounted && createPortal(
-            <div 
-              className="fixed inset-0 z-[999] flex items-center justify-center bg-black bg-opacity-50" 
-              style={{ zIndex: 9999 }}
-              onClick={(e) => {
-                if (e.target === e.currentTarget) {
-                  setShowDetails(false);
-                }
-              }}
-            >
-              <div className="dark:border-strokedark dark:bg-boxdark w-full max-w-xl rounded-sm border border-stroke bg-white p-4 shadow-2xl sm:p-6">
-                <div className="mb-4 flex items-center justify-between">
-                  <h3 className="text-title-md font-bold text-black dark:text-white">
-                    Contact Details
-                  </h3>
-                  <button
-                    onClick={() => setShowDetails(false)}
-                    className="text-body-color hover:text-meta-1"
-                  >
-                    ×
-                  </button>
-                </div>
-
-                <div className="space-y-4.5">
-                  <div>
-                    <label className="mb-2.5 block text-black dark:text-white">
-                      Name
-                    </label>
-                    <p className="text-body-color dark:text-bodydark">
-                      {selectedContact.name}
-                    </p>
+          {showDetails &&
+            selectedContact &&
+            isMounted &&
+            createPortal(
+              <div
+                className="fixed inset-0 z-[999] flex items-center justify-center bg-black bg-opacity-50"
+                style={{ zIndex: 9999 }}
+                onClick={(e) => {
+                  if (e.target === e.currentTarget) {
+                    setShowDetails(false);
+                  }
+                }}
+              >
+                <div className="dark:border-strokedark dark:bg-boxdark w-full max-w-xl rounded-sm border border-stroke bg-white p-4 shadow-2xl sm:p-6">
+                  <div className="mb-4 flex items-center justify-between">
+                    <h3 className="text-title-md font-bold text-black dark:text-white">
+                      Contact Details
+                    </h3>
+                    <button
+                      onClick={() => setShowDetails(false)}
+                      className="text-body-color hover:text-meta-1"
+                    >
+                      ×
+                    </button>
                   </div>
 
-                  <div>
-                    <label className="mb-2.5 block text-black dark:text-white">
-                      Email
-                    </label>
-                    <p className="text-body-color dark:text-bodydark">
-                      {selectedContact.email}
-                    </p>
-                  </div>
+                  <div className="space-y-4.5">
+                    <div>
+                      <label className="mb-2.5 block text-black dark:text-white">
+                        Name
+                      </label>
+                      <p className="text-body-color dark:text-bodydark">
+                        {selectedContact.name}
+                      </p>
+                    </div>
 
-                  <div>
-                    <label className="mb-2.5 block text-black dark:text-white">
-                      Message
-                    </label>
-                    <p className="text-body-color dark:text-bodydark whitespace-pre-wrap">
-                      {selectedContact.message}
-                    </p>
-                  </div>
+                    <div>
+                      <label className="mb-2.5 block text-black dark:text-white">
+                        Email
+                      </label>
+                      <p className="text-body-color dark:text-bodydark">
+                        {selectedContact.email}
+                      </p>
+                    </div>
 
-                  <div>
-                    <label className="mb-2.5 block text-black dark:text-white">
-                      Date
-                    </label>
-                    <p className="text-body-color dark:text-bodydark">
-                      {formatDate(selectedContact.createdAt)}
-                    </p>
-                  </div>
+                    <div>
+                      <label className="mb-2.5 block text-black dark:text-white">
+                        Message
+                      </label>
+                      <p className="text-body-color dark:text-bodydark whitespace-pre-wrap">
+                        {selectedContact.message}
+                      </p>
+                    </div>
 
-                  <div>
-                    <label className="mb-2.5 block text-black dark:text-white">
-                      Status
-                    </label>
-                    <div className="flex items-center">
-                      <Switch
-                        checked={selectedContact.reviewed}
-                        onCheckedChange={() => {
-                          handleReadToggle(
-                            selectedContact._id,
-                            selectedContact.reviewed,
-                          );
-                          setSelectedContact((prev) => {
-                            if (!prev) return null;
-                            return { ...prev, reviewed: !prev.reviewed };
-                          });
-                        }}
-                        disabled={loading}
-                      />
-                      <span className="text-body-color dark:text-bodydark ml-2 text-sm">
-                        {selectedContact.reviewed ? "Read" : "Unread"}
-                      </span>
+                    <div>
+                      <label className="mb-2.5 block text-black dark:text-white">
+                        Date
+                      </label>
+                      <p className="text-body-color dark:text-bodydark">
+                        {formatDate(selectedContact.createdAt)}
+                      </p>
+                    </div>
+
+                    <div>
+                      <label className="mb-2.5 block text-black dark:text-white">
+                        Status
+                      </label>
+                      <div className="flex items-center">
+                        <Switch
+                          checked={selectedContact.reviewed}
+                          onCheckedChange={() => {
+                            handleReadToggle(
+                              selectedContact._id,
+                              selectedContact.reviewed,
+                            );
+                            setSelectedContact((prev) => {
+                              if (!prev) return null;
+                              return { ...prev, reviewed: !prev.reviewed };
+                            });
+                          }}
+                          disabled={loading}
+                        />
+                        <span className="text-body-color dark:text-bodydark ml-2 text-sm">
+                          {selectedContact.reviewed ? "Read" : "Unread"}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div className="mt-6 flex items-center justify-end gap-4">
-                  <button
-                    onClick={() => setShowDetails(false)}
-                    className="dark:border-strokedark flex justify-center rounded border border-stroke px-6 py-2 font-medium text-black hover:shadow-1 dark:text-white"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={() => {
-                      handleDeleteContact(selectedContact._id);
-                      setShowDetails(false);
-                    }}
-                    className="bg-meta-1 flex justify-center rounded px-6 py-2 font-medium text-gray hover:bg-opacity-90"
-                  >
-                    Delete
-                  </button>
+                  <div className="mt-6 flex items-center justify-end gap-4">
+                    <button
+                      onClick={() => setShowDetails(false)}
+                      className="dark:border-strokedark flex justify-center rounded border border-stroke px-6 py-2 font-medium text-black hover:shadow-1 dark:text-white"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={() => {
+                        handleDeleteContact(selectedContact._id);
+                        setShowDetails(false);
+                      }}
+                      className="bg-meta-1 flex justify-center rounded px-6 py-2 font-medium text-gray hover:bg-opacity-90"
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </div>,
-            document.body
-          )}
+              </div>,
+              document.body,
+            )}
         </div>
       </div>
     </>

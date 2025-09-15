@@ -256,225 +256,239 @@ export const ProjectList = ({ category, onBack, token }: ProjectListProps) => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <button
-            onClick={onBack}
-            className="flex items-center gap-2 text-primary hover:text-opacity-80"
+      <div className="">
+        <button
+          onClick={onBack}
+          className="flex items-center gap-2 text-primary hover:text-opacity-80"
+        >
+          <svg
+            className="h-5 w-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
           >
-            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            Back to Categories
-          </button>
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+          Back to Categories
+        </button>
+        <div className="flex items-center justify-between">
           <h2 className="text-2xl font-semibold text-black dark:text-white">
             {category.name} Projects
           </h2>
-        </div>
         <button
           onClick={() => setIsFormOpen(true)}
           className="rounded-lg bg-primary px-6 py-2 text-white hover:bg-opacity-90"
         >
           Add New Project
         </button>
+        </div>
       </div>
 
       {/* Project Form Modal */}
-      {isFormOpen && isMounted && createPortal(
-        <div 
-          className="fixed inset-0 z-[999] flex items-center justify-center bg-black bg-opacity-50 p-4" 
-          style={{ zIndex: 9999 }}
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              resetForm();
-            }
-          }}
-        >
-          <div className="dark:bg-boxdark max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-6 shadow-2xl">
-            <h3 className="mb-4 text-xl font-semibold text-black dark:text-white">
-              {editingProject ? "Edit Project" : "Add New Project"}
-            </h3>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <InputGroup
-                label="Title"
-                type="text"
-                placeholder="Enter project title"
-                required
-                value={formData.title}
-                handleChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    title: e.target.value,
-                  }))
-                }
-              />
-
-              <TextAreaGroup
-                label="Description"
-                placeholder="Enter project description"
-                required
-                value={formData.description}
-                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    description: e.target.value,
-                  }))
-                }
-              />
-
-              <InputGroup
-                label="Location"
-                type="text"
-                placeholder="Enter project location"
-                value={formData.location}
-                handleChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    location: e.target.value,
-                  }))
-                }
-              />
-
-              <div className="space-y-2">
-                <label className="mb-3 block text-black dark:text-white">
-                  Technologies
-                </label>
-                <div className="flex gap-2">
-                  <InputGroup
-                    label=""
-                    type="text"
-                    placeholder="Add technology"
-                    value={techInput}
-                    handleChange={(e: React.ChangeEvent<HTMLInputElement>) => setTechInput(e.target.value)}
-                  />
-                  <button
-                    type="button"
-                    onClick={addTechnology}
-                    className="rounded-lg bg-primary px-4 py-2 text-white"
-                  >
-                    Add
-                  </button>
-                </div>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {formData.technologies.map((tech, index) => (
-                    <span
-                      key={index}
-                      className="flex items-center gap-2 rounded-full bg-gray-200 px-3 py-1 dark:bg-gray-700"
-                    >
-                      {tech}
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setFormData((prev) => ({
-                            ...prev,
-                            technologies: prev.technologies.filter(
-                              (_, i) => i !== index,
-                            ),
-                          }))
-                        }
-                        className="text-red-500"
-                      >
-                        ×
-                      </button>
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <label className="mb-3 block text-black dark:text-white">
-                  Status
-                </label>
-                <select
-                  value={formData.status}
-                  onChange={(e) =>
+      {isFormOpen &&
+        isMounted &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[999] flex items-center justify-center bg-black bg-opacity-50 p-4"
+            style={{ zIndex: 9999 }}
+            onClick={(e) => {
+              if (e.target === e.currentTarget) {
+                resetForm();
+              }
+            }}
+          >
+            <div className="dark:bg-boxdark max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-6 shadow-2xl">
+              <h3 className="mb-4 text-xl font-semibold text-black dark:text-white">
+                {editingProject ? "Edit Project" : "Add New Project"}
+              </h3>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <InputGroup
+                  label="Title"
+                  type="text"
+                  placeholder="Enter project title"
+                  required
+                  value={formData.title}
+                  handleChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     setFormData((prev) => ({
                       ...prev,
-                      status: e.target.value as "ongoing" | "completed",
+                      title: e.target.value,
                     }))
                   }
-                  className="dark:border-strokedark w-full rounded-lg border border-stroke bg-transparent px-4 py-2 outline-none focus:border-primary"
-                >
-                  <option value="ongoing">Ongoing</option>
-                  <option value="completed">Completed</option>
-                </select>
-              </div>
-
-              <InputGroup
-                placeholder=""
-                label="Project Image"
-                type="file"
-                accept="image/*"
-                required={!editingProject}
-                handleChange={handleFileChange}
-              />
-
-              {previewUrl && (
-                <div className="relative mt-4 aspect-video">
-                  <Image
-                    src={previewUrl}
-                    alt="Preview"
-                    fill
-                    className="rounded-lg object-contain"
-                  />
-                </div>
-              )}
-
-              <div className="space-y-4">
-                <label className="mb-3 block text-black dark:text-white">
-                  Portfolio Images (Optional)
-                </label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  onChange={handlePortfolioImagesChange}
-                  className="dark:border-strokedark w-full rounded-lg border border-stroke bg-transparent px-4 py-2 outline-none focus:border-primary"
                 />
-                
-                {portfolioPreviewUrls.length > 0 && (
-                  <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
-                    {portfolioPreviewUrls.map((url, index) => (
-                      <div key={index} className="relative aspect-video">
-                        <Image
-                          src={url}
-                          alt={`Portfolio ${index + 1}`}
-                          fill
-                          className="rounded-lg object-cover"
-                        />
+
+                <TextAreaGroup
+                  label="Description"
+                  placeholder="Enter project description"
+                  required
+                  value={formData.description}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      description: e.target.value,
+                    }))
+                  }
+                />
+
+                <InputGroup
+                  label="Location"
+                  type="text"
+                  placeholder="Enter project location"
+                  value={formData.location}
+                  handleChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      location: e.target.value,
+                    }))
+                  }
+                />
+
+                <div className="space-y-2">
+                  <label className="mb-3 block text-black dark:text-white">
+                    Technologies
+                  </label>
+                  <div className="flex gap-2">
+                    <InputGroup
+                      label=""
+                      type="text"
+                      placeholder="Add technology"
+                      value={techInput}
+                      handleChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setTechInput(e.target.value)
+                      }
+                    />
+                    <button
+                      type="button"
+                      onClick={addTechnology}
+                      className="rounded-lg bg-primary px-4 py-2 text-white"
+                    >
+                      Add
+                    </button>
+                  </div>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {formData.technologies.map((tech, index) => (
+                      <span
+                        key={index}
+                        className="flex items-center gap-2 rounded-full bg-gray-200 px-3 py-1 dark:bg-gray-700"
+                      >
+                        {tech}
                         <button
                           type="button"
-                          onClick={() => removePortfolioImage(index)}
-                          className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-white text-sm hover:bg-red-600"
+                          onClick={() =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              technologies: prev.technologies.filter(
+                                (_, i) => i !== index,
+                              ),
+                            }))
+                          }
+                          className="text-red-500"
                         >
                           ×
                         </button>
-                      </div>
+                      </span>
                     ))}
                   </div>
-                )}
-              </div>
+                </div>
 
-              <div className="flex justify-end gap-3">
-                <button
-                  type="button"
-                  onClick={resetForm}
-                  className="rounded-lg border border-gray-300 px-6 py-2 hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-700"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="rounded-lg bg-primary px-6 py-2 text-white hover:bg-opacity-90"
-                >
-                  {editingProject ? "Update" : "Create"}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>,
-        document.body
-      )}
+                <div className="space-y-2">
+                  <label className="mb-3 block text-black dark:text-white">
+                    Status
+                  </label>
+                  <select
+                    value={formData.status}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        status: e.target.value as "ongoing" | "completed",
+                      }))
+                    }
+                    className="dark:border-strokedark w-full rounded-lg border border-stroke bg-transparent px-4 py-2 outline-none focus:border-primary"
+                  >
+                    <option value="ongoing">Ongoing</option>
+                    <option value="completed">Completed</option>
+                  </select>
+                </div>
+
+                <InputGroup
+                  placeholder=""
+                  label="Project Image"
+                  type="file"
+                  accept="image/*"
+                  required={!editingProject}
+                  handleChange={handleFileChange}
+                />
+
+                {previewUrl && (
+                  <div className="relative mt-4 aspect-video">
+                    <Image
+                      src={previewUrl}
+                      alt="Preview"
+                      fill
+                      className="rounded-lg object-contain"
+                    />
+                  </div>
+                )}
+
+                <div className="space-y-4">
+                  <label className="mb-3 block text-black dark:text-white">
+                    Portfolio Images (Optional)
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handlePortfolioImagesChange}
+                    className="dark:border-strokedark w-full rounded-lg border border-stroke bg-transparent px-4 py-2 outline-none focus:border-primary"
+                  />
+
+                  {portfolioPreviewUrls.length > 0 && (
+                    <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+                      {portfolioPreviewUrls.map((url, index) => (
+                        <div key={index} className="relative aspect-video">
+                          <Image
+                            src={url}
+                            alt={`Portfolio ${index + 1}`}
+                            fill
+                            className="rounded-lg object-cover"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => removePortfolioImage(index)}
+                            className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-sm text-white hover:bg-red-600"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex justify-end gap-3">
+                  <button
+                    type="button"
+                    onClick={resetForm}
+                    className="rounded-lg border border-gray-300 px-6 py-2 hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-700"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="rounded-lg bg-primary px-6 py-2 text-white hover:bg-opacity-90"
+                  >
+                    {editingProject ? "Update" : "Create"}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>,
+          document.body,
+        )}
 
       {/* Projects Grid */}
       {loading ? (
@@ -537,7 +551,8 @@ export const ProjectList = ({ category, onBack, token }: ProjectListProps) => {
       {projects.length === 0 && !loading && (
         <div className="flex h-32 items-center justify-center">
           <p className="text-gray-500 dark:text-gray-400">
-            No projects found in this category. Create your first project to get started!
+            No projects found in this category. Create your first project to get
+            started!
           </p>
         </div>
       )}

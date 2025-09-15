@@ -5,6 +5,7 @@ export interface Enquiry {
   message: string;
   reviewed: boolean;
   createdAt: string;
+  projectName: string;
 }
 
 export interface EnquiryFilters {

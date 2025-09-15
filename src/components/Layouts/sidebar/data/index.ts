@@ -49,7 +49,14 @@ export const NAV_DATA = [
         title: "Services",
         url: "/services",
         icon: Icons.services,
-        items: [],
+        items: [{
+          title: "Main Services",
+          url: "/services/main",
+        },
+      { 
+          title: "Industrial Services",
+          url: "/services/industrial",
+      }],
       },
       {
         title: "Career",
