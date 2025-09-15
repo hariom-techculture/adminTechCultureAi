@@ -5,6 +5,7 @@ export interface Service {
   image?: string;
   features: string[];
   category: string;
+  order?: number;
   createdAt: string;
 }
 

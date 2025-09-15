@@ -28,6 +28,7 @@ export default function ServicesPage() {
     title: "",
     description: "",
     category: "main",
+    order: 0,
     features: [] as string[],
     file: null as File | null,
   });
@@ -174,6 +175,7 @@ export default function ServicesPage() {
       title: "",
       description: "",
       category: "main",
+      order: 0,
       features: [],
       file: null,
     });
@@ -189,6 +191,7 @@ export default function ServicesPage() {
       title: service.title,
       description: service.description,
       category: service.category,
+      order: service.order || 0,
       features: service.features,
       file: null,
     });
@@ -287,6 +290,19 @@ export default function ServicesPage() {
                         <option value="industry">Industry</option>
                       </select>
                     </div>
+
+                    <InputGroup
+                      label="Display Order"
+                      type="number"
+                      placeholder="Enter display order (0 = first)"
+                      value={formData.order.toString()}
+                      handleChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          order: parseInt(e.target.value) || 0,
+                        }))
+                      }
+                    />
 
                     <div className="space-y-2">
                       <label className="mb-3 block text-black dark:text-white">
@@ -419,9 +435,14 @@ export default function ServicesPage() {
                       </div>
                     </div>
                     <div className="mt-4 flex items-center justify-between">
-                      <span className="rounded-full bg-primary/10 px-3 py-1 text-sm text-primary">
-                        {service.category}
-                      </span>
+                      <div className="flex gap-2">
+                        <span className="rounded-full bg-primary/10 px-3 py-1 text-sm text-primary">
+                          {service.category}
+                        </span>
+                        <span className="rounded-full bg-blue-100 px-3 py-1 text-sm text-blue-600 dark:bg-blue-900 dark:text-blue-400">
+                          Order: {service.order || 0}
+                        </span>
+                      </div>
                       <div className="flex gap-2">
                         <button
                           onClick={() => handleEdit(service)}
