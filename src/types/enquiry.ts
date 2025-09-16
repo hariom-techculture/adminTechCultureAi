@@ -6,6 +6,8 @@ export interface Enquiry {
   reviewed: boolean;
   createdAt: string;
   projectName: string;
+  ip ?: string;
+  location ?: string;
 }
 
 export interface EnquiryFilters {

@@ -9,7 +9,7 @@ export default function Signin() {
       
       <SigninWithPassword />
       
-      <div className="mt-6 text-center">
+      {/* <div className="mt-6 text-center">
         <p className="text-sm text-gray-500 dark:text-gray-400">
           Forgot your password?{" "}
           <a
@@ -19,7 +19,7 @@ export default function Signin() {
             Reset it here
           </a>
         </p>
-      </div>
+      </div> */}
     </div>
   );
 }

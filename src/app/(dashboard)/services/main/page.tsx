@@ -29,6 +29,7 @@ export default function ServicesPage() {
     description: "",
     category: "main",
     order: 0,
+    showOnHomePage: false,
     features: [] as string[],
     file: null as File | null,
   });
@@ -176,6 +177,7 @@ export default function ServicesPage() {
       description: "",
       category: "main",
       order: 0,
+      showOnHomePage: false,
       features: [],
       file: null,
     });
@@ -192,6 +194,7 @@ export default function ServicesPage() {
       description: service.description,
       category: service.category,
       order: service.order || 0,
+      showOnHomePage: service.showOnHomePage || false,
       features: service.features,
       file: null,
     });
@@ -303,6 +306,28 @@ export default function ServicesPage() {
                         }))
                       }
                     />
+
+                    <div className="mb-4">
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          checked={formData.showOnHomePage}
+                          onChange={(e) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              showOnHomePage: e.target.checked,
+                            }))
+                          }
+                          className="mr-2 h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                        />
+                        <span className="text-black dark:text-white">
+                          Show on Homepage
+                        </span>
+                      </label>
+                      <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                        Check this to display the service on the homepage
+                      </p>
+                    </div>
 
                     <div className="space-y-2">
                       <label className="mb-3 block text-black dark:text-white">
@@ -442,6 +467,11 @@ export default function ServicesPage() {
                         <span className="rounded-full bg-blue-100 px-3 py-1 text-sm text-blue-600 dark:bg-blue-900 dark:text-blue-400">
                           Order: {service.order || 0}
                         </span>
+                        {service.showOnHomePage && (
+                          <span className="rounded-full bg-green-100 px-3 py-1 text-sm text-green-600 dark:bg-green-900 dark:text-green-400">
+                            Homepage
+                          </span>
+                        )}
                       </div>
                       <div className="flex gap-2">
                         <button

@@ -6,6 +6,7 @@ export interface Service {
   features: string[];
   category: string;
   order?: number;
+  showOnHomePage?: boolean;
   createdAt: string;
 }
 

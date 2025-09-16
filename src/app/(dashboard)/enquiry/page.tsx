@@ -293,6 +293,12 @@ export default function EnquiryPage() {
                       Project Name
                     </th>
                     <th className="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
+                      IP Address
+                    </th>
+                    <th className="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
+                      Location
+                    </th>
+                    <th className="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
                       Message
                     </th>
                     <th className="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
@@ -327,6 +333,16 @@ export default function EnquiryPage() {
                       <td className="dark:border-strokedark border-b border-[#eee] px-4 py-5">
                         <p className="text-black dark:text-white">
                           {enquiry.projectName || "General"}
+                        </p>
+                      </td>
+                      <td className="dark:border-strokedark border-b border-[#eee] px-4 py-5">
+                        <p className="text-black dark:text-white">
+                          {enquiry.ip || "Unknown"}
+                        </p>
+                      </td>
+                      <td className="dark:border-strokedark border-b border-[#eee] px-4 py-5">
+                        <p className="text-black dark:text-white">
+                          {enquiry.location || "Unknown"}
                         </p>
                       </td>
                       <td className="dark:border-strokedark border-b border-[#eee] px-4 py-5">
