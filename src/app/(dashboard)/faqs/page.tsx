@@ -19,7 +19,7 @@ export default function FAQsPage() {
     answer: '',
     category: 'General',
     isActive: true,
-    order: 0,
+    order: 1,
   });
   const [isMounted, setIsMounted] = useState(false);
 
@@ -116,7 +116,7 @@ export default function FAQsPage() {
       answer: '',
       category: 'General',
       isActive: true,
-      order: 0,
+      order: 1,
     });
     setEditingFAQ(null);
     setIsFormOpen(false);
@@ -260,7 +260,7 @@ export default function FAQsPage() {
                       handleChange={(e) =>
                         setFormData((prev) => ({
                           ...prev,
-                          order: parseInt(e.target.value) || 0,
+                          order: parseInt(e.target.value),
                         }))
                       }
                     />

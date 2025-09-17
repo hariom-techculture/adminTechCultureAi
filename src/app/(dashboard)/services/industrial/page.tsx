@@ -28,7 +28,7 @@ export default function ServicesPage() {
     title: "",
     description: "",
     category: "industry",
-    order: 0,
+    order: 1,
     features: [] as string[],
     file: null as File | null,
   });
@@ -175,7 +175,7 @@ export default function ServicesPage() {
       title: "",
       description: "",
       category: "industry",
-      order: 0,
+      order: 1,
       features: [],
       file: null,
     });
@@ -191,7 +191,7 @@ export default function ServicesPage() {
       title: service.title,
       description: service.description,
       category: service.category,
-      order: service.order || 0,
+      order: service.order || 1,
       features: service.features,
       file: null,
     });
@@ -294,12 +294,12 @@ export default function ServicesPage() {
                     <InputGroup
                       label="Display Order"
                       type="number"
-                      placeholder="Enter display order (0 = first)"
+                      placeholder="Enter display order"
                       value={formData.order.toString()}
                       handleChange={(e) =>
                         setFormData((prev) => ({
                           ...prev,
-                          order: parseInt(e.target.value) || 0,
+                          order: parseInt(e.target.value) ,
                         }))
                       }
                     />
@@ -440,7 +440,7 @@ export default function ServicesPage() {
                           {service.category}
                         </span>
                         <span className="rounded-full bg-blue-100 px-3 py-1 text-sm text-blue-600 dark:bg-blue-900 dark:text-blue-400">
-                          Order: {service.order || 0}
+                          Order: {service.order || 1}
                         </span>
                       </div>
                       <div className="flex gap-2">
