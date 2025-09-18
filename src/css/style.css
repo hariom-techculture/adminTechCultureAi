@@ -478,3 +478,494 @@ input[type="search"]::-webkit-search-cancel-button {
 .custom-gradient-1 {
   background-image: linear-gradient(145deg, #eef 0%, #fff8fc 100%);
 }
+
+/* Rich Text Editor Content Styling for Admin Panel */
+.prose-admin h1,
+.prose-admin h2,
+.prose-admin h3,
+.prose-admin h4,
+.prose-admin h5,
+.prose-admin h6 {
+  font-weight: 600;
+  margin-top: 0.75em;
+  margin-bottom: 0.5em;
+  color: inherit;
+}
+
+.prose-admin h1 {
+  font-size: 1.5em;
+  line-height: 1.2;
+}
+
+.prose-admin h2 {
+  font-size: 1.375em;
+  line-height: 1.3;
+}
+
+.prose-admin h3 {
+  font-size: 1.25em;
+  line-height: 1.4;
+}
+
+.prose-admin h4 {
+  font-size: 1.125em;
+  line-height: 1.5;
+}
+
+.prose-admin h5 {
+  font-size: 1.0625em;
+  line-height: 1.5;
+}
+
+.prose-admin h6 {
+  font-size: 1em;
+  line-height: 1.5;
+}
+
+.prose-admin p {
+  margin-bottom: 0.75em;
+}
+
+.prose-admin ul,
+.prose-admin ol {
+  margin: 0.75em 0;
+  padding-left: 1.25em;
+}
+
+.prose-admin ul {
+  list-style-type: disc;
+}
+
+.prose-admin ol {
+  list-style-type: decimal;
+}
+
+.prose-admin li {
+  margin: 0.25em 0;
+}
+
+.prose-admin ul ul,
+.prose-admin ol ol,
+.prose-admin ul ol,
+.prose-admin ol ul {
+  margin: 0.25em 0;
+}
+
+.prose-admin blockquote {
+  border-left: 3px solid #3b82f6;
+  padding-left: 0.75em;
+  margin: 1em 0;
+  font-style: italic;
+}
+
+.prose-admin code {
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 0.125em 0.25em;
+  border-radius: 0.25em;
+  font-size: 0.875em;
+}
+
+.dark .prose-admin code {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.prose-admin pre {
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 0.75em;
+  border-radius: 0.375em;
+  overflow-x: auto;
+  margin: 1em 0;
+}
+
+.dark .prose-admin pre {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.prose-admin pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+.prose-admin strong {
+  font-weight: 600;
+}
+
+.prose-admin em {
+  font-style: italic;
+}
+
+.prose-admin a {
+  color: #3b82f6;
+  text-decoration: underline;
+}
+
+.prose-admin a:hover {
+  color: #2563eb;
+}
+
+/* React Simple WYSIWYG Editor Styling */
+.rsw-editor {
+  min-height: 200px !important;
+}
+
+/* Editor container styling */
+.rich-text-editor-container .rsw-editor {
+  border: 1px solid #e2e8f0;
+  border-radius: 0.375rem;
+  overflow: hidden;
+}
+
+.dark .rich-text-editor-container .rsw-editor {
+  border-color: #374151;
+}
+
+/* Toolbar styling */
+.rich-text-editor-container .rsw-toolbar {
+  border-bottom: 1px solid #e2e8f0;
+  background-color: #f8fafc;
+  padding: 8px;
+}
+
+.dark .rich-text-editor-container .rsw-toolbar {
+  border-bottom-color: #374151;
+  background-color: #1f2937;
+}
+
+/* Style the editor content area with more specific selectors */
+.rsw-editor [contenteditable="true"],
+.rsw-editor div[contenteditable="true"],
+.rsw-editor .rsw-ce {
+  min-height: 180px !important;
+  padding: 12px !important;
+  font-family: inherit !important;
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+  outline: none !important;
+}
+
+/* Headings in editor - Multiple selectors for compatibility */
+.rsw-editor [contenteditable="true"] h1,
+.rsw-editor div[contenteditable="true"] h1,
+.rsw-editor .rsw-ce h1 {
+  font-size: 1.875em !important;
+  font-weight: 700 !important;
+  margin: 0.5em 0 !important;
+  color: inherit !important;
+  display: block !important;
+}
+
+.rsw-editor [contenteditable="true"] h2,
+.rsw-editor div[contenteditable="true"] h2,
+.rsw-editor .rsw-ce h2 {
+  font-size: 1.5em !important;
+  font-weight: 600 !important;
+  margin: 0.5em 0 !important;
+  color: inherit !important;
+  display: block !important;
+}
+
+.rsw-editor [contenteditable="true"] h3,
+.rsw-editor div[contenteditable="true"] h3,
+.rsw-editor .rsw-ce h3 {
+  font-size: 1.25em !important;
+  font-weight: 600 !important;
+  margin: 0.5em 0 !important;
+  color: inherit !important;
+  display: block !important;
+}
+
+.rsw-editor [contenteditable="true"] h4,
+.rsw-editor div[contenteditable="true"] h4,
+.rsw-editor .rsw-ce h4 {
+  font-size: 1.125em !important;
+  font-weight: 600 !important;
+  margin: 0.5em 0 !important;
+  color: inherit !important;
+  display: block !important;
+}
+
+.rsw-editor [contenteditable="true"] h5,
+.rsw-editor div[contenteditable="true"] h5,
+.rsw-editor .rsw-ce h5 {
+  font-size: 1.0625em !important;
+  font-weight: 600 !important;
+  margin: 0.5em 0 !important;
+  color: inherit !important;
+  display: block !important;
+}
+
+.rsw-editor [contenteditable="true"] h6,
+.rsw-editor div[contenteditable="true"] h6,
+.rsw-editor .rsw-ce h6 {
+  font-size: 1em !important;
+  font-weight: 600 !important;
+  margin: 0.5em 0 !important;
+  color: inherit !important;
+  display: block !important;
+}
+
+/* Lists in editor - Multiple selectors for compatibility */
+.rsw-editor [contenteditable="true"] ul,
+.rsw-editor div[contenteditable="true"] ul,
+.rsw-editor .rsw-ce ul {
+  list-style-type: disc !important;
+  margin: 0.5em 0 !important;
+  padding-left: 1.5em !important;
+  display: block !important;
+}
+
+.rsw-editor [contenteditable="true"] ol,
+.rsw-editor div[contenteditable="true"] ol,
+.rsw-editor .rsw-ce ol {
+  list-style-type: decimal !important;
+  margin: 0.5em 0 !important;
+  padding-left: 1.5em !important;
+  display: block !important;
+}
+
+.rsw-editor [contenteditable="true"] li,
+.rsw-editor div[contenteditable="true"] li,
+.rsw-editor .rsw-ce li {
+  margin: 0.25em 0 !important;
+  display: list-item !important;
+  list-style-position: outside !important;
+}
+
+/* Nested lists */
+.rsw-editor [contenteditable="true"] ul ul,
+.rsw-editor [contenteditable="true"] ol ol,
+.rsw-editor [contenteditable="true"] ul ol,
+.rsw-editor [contenteditable="true"] ol ul,
+.rsw-editor div[contenteditable="true"] ul ul,
+.rsw-editor div[contenteditable="true"] ol ol,
+.rsw-editor div[contenteditable="true"] ul ol,
+.rsw-editor div[contenteditable="true"] ol ul,
+.rsw-editor .rsw-ce ul ul,
+.rsw-editor .rsw-ce ol ol,
+.rsw-editor .rsw-ce ul ol,
+.rsw-editor .rsw-ce ol ul {
+  margin: 0.25em 0 !important;
+  padding-left: 1.5em !important;
+}
+
+/* Paragraphs in editor */
+.rsw-editor [contenteditable="true"] p,
+.rsw-editor div[contenteditable="true"] p,
+.rsw-editor .rsw-ce p {
+  margin: 0.5em 0 !important;
+  display: block !important;
+}
+
+/* Bold and italic */
+.rsw-editor [contenteditable="true"] strong,
+.rsw-editor [contenteditable="true"] b,
+.rsw-editor div[contenteditable="true"] strong,
+.rsw-editor div[contenteditable="true"] b,
+.rsw-editor .rsw-ce strong,
+.rsw-editor .rsw-ce b {
+  font-weight: 700 !important;
+}
+
+.rsw-editor [contenteditable="true"] em,
+.rsw-editor [contenteditable="true"] i,
+.rsw-editor div[contenteditable="true"] em,
+.rsw-editor div[contenteditable="true"] i,
+.rsw-editor .rsw-ce em,
+.rsw-editor .rsw-ce i {
+  font-style: italic !important;
+}
+
+/* Blockquotes */
+.rsw-editor [contenteditable="true"] blockquote,
+.rsw-editor div[contenteditable="true"] blockquote,
+.rsw-editor .rsw-ce blockquote {
+  border-left: 4px solid #3b82f6 !important;
+  padding-left: 1em !important;
+  margin: 1em 0 !important;
+  font-style: italic !important;
+  color: #6b7280 !important;
+  background-color: rgba(59, 130, 246, 0.05) !important;
+  padding: 1em !important;
+  border-radius: 0.25rem !important;
+  display: block !important;
+}
+
+.dark .rsw-editor [contenteditable="true"] blockquote,
+.dark .rsw-editor div[contenteditable="true"] blockquote,
+.dark .rsw-editor .rsw-ce blockquote {
+  color: #9ca3af !important;
+  background-color: rgba(59, 130, 246, 0.1) !important;
+}
+
+/* Code */
+.rsw-editor [contenteditable="true"] code,
+.rsw-editor div[contenteditable="true"] code,
+.rsw-editor .rsw-ce code {
+  background-color: #f3f4f6 !important;
+  padding: 0.125em 0.25em !important;
+  border-radius: 0.25em !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 0.875em !important;
+}
+
+.dark .rsw-editor [contenteditable="true"] code,
+.dark .rsw-editor div[contenteditable="true"] code,
+.dark .rsw-editor .rsw-ce code {
+  background-color: #374151 !important;
+  color: #fbbf24 !important;
+}
+
+/* Links */
+.rsw-editor [contenteditable="true"] a,
+.rsw-editor div[contenteditable="true"] a,
+.rsw-editor .rsw-ce a {
+  color: #3b82f6 !important;
+  text-decoration: underline !important;
+}
+
+.rsw-editor [contenteditable="true"] a:hover,
+.rsw-editor div[contenteditable="true"] a:hover,
+.rsw-editor .rsw-ce a:hover {
+  color: #2563eb !important;
+}
+
+/* Global overrides for list styling in all contenteditable areas */
+[contenteditable="true"] ul {
+  list-style-type: disc !important;
+  padding-left: 1.5em !important;
+}
+
+[contenteditable="true"] ol {
+  list-style-type: decimal !important;
+  padding-left: 1.5em !important;
+}
+
+[contenteditable="true"] li {
+  display: list-item !important;
+  list-style-position: outside !important;
+}
+
+/* Format clearing and normalization */
+.rsw-editor [contenteditable="true"] p {
+  font-size: inherit !important;
+  font-weight: normal !important;
+  font-style: normal !important;
+  margin: 0.5em 0 !important;
+  line-height: inherit !important;
+}
+
+/* Prevent nested heading issues */
+.rsw-editor [contenteditable="true"] h1 h1,
+.rsw-editor [contenteditable="true"] h2 h2,
+.rsw-editor [contenteditable="true"] h3 h3,
+.rsw-editor [contenteditable="true"] h4 h4,
+.rsw-editor [contenteditable="true"] h5 h5,
+.rsw-editor [contenteditable="true"] h6 h6 {
+  display: inline !important;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  margin: 0 !important;
+}
+
+/* Clean up nested divs and spans */
+.rsw-editor [contenteditable="true"] div div,
+.rsw-editor [contenteditable="true"] span span {
+  display: inline !important;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  color: inherit !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Normalize text when switching to normal */
+.rsw-editor [contenteditable="true"] div {
+  font-size: inherit !important;
+  font-weight: normal !important;
+  color: inherit !important;
+  margin: 0.25em 0 !important;
+}
+
+.rsw-editor [contenteditable="true"] span {
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  color: inherit !important;
+}
+
+/* Handle "Normal" style specifically - Override inline font-size styles */
+.rsw-editor [contenteditable="true"] div[style*="font-size"],
+.rsw-editor [contenteditable="true"] span[style*="font-size"] {
+  font-size: 14px !important;
+}
+
+/* Force normal styling for div and span elements when they should be normal text */
+.rsw-editor [contenteditable="true"] div:not(:has(h1,h2,h3,h4,h5,h6)),
+.rsw-editor [contenteditable="true"] span:not(:has(h1,h2,h3,h4,h5,h6)) {
+  font-size: 14px !important;
+  font-weight: normal !important;
+  line-height: 1.6 !important;
+}
+
+/* Ensure proper line heights for normal text */
+.rsw-editor [contenteditable="true"] {
+  line-height: 1.6 !important;
+  font-size: 14px !important;
+}
+
+/* But preserve heading styles when they are proper headings */
+.rsw-editor [contenteditable="true"] h1 {
+  font-size: 1.875em !important;
+}
+
+.rsw-editor [contenteditable="true"] h2 {
+  font-size: 1.5em !important;
+}
+
+.rsw-editor [contenteditable="true"] h3 {
+  font-size: 1.25em !important;
+}
+
+.rsw-editor [contenteditable="true"] h4 {
+  font-size: 1.125em !important;
+}
+
+.rsw-editor [contenteditable="true"] h5 {
+  font-size: 1.0625em !important;
+}
+
+.rsw-editor [contenteditable="true"] h6 {
+  font-size: 1em !important;
+}
+
+/* Ensure proper line heights for normal text */
+.rsw-editor [contenteditable="true"] {
+  line-height: 1.6 !important;
+}
+
+/* Style the clear formatting button */
+.clear-formatting-btn {
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.clear-formatting-btn:hover {
+  background: #e2e8f0;
+  color: #475569;
+}
+
+.dark .clear-formatting-btn {
+  border-color: #374151;
+  background: #1f2937;
+  color: #9ca3af;
+}
+
+.dark .clear-formatting-btn:hover {
+  background: #374151;
+  color: #d1d5db;
+}

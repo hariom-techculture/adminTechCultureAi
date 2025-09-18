@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import { toast } from 'react-hot-toast';
@@ -6,6 +6,7 @@ import { Category } from '@/types/category';
 import { Project } from '@/types/project';
 import InputGroup from '@/components/FormElements/InputGroup';
 import { TextAreaGroup } from '@/components/FormElements/InputGroup/text-area';
+import Editor from "react-simple-wysiwyg";
 
 interface ProjectListProps {
   category: Category;
@@ -29,6 +30,7 @@ export const ProjectList = ({ category, onBack, token }: ProjectListProps) => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [isMounted, setIsMounted] = useState(false);
+  const editorRef = useRef<any>(null);
   
   const [formData, setFormData] = useState<ProjectFormData>({
     title: '',
@@ -39,6 +41,130 @@ export const ProjectList = ({ category, onBack, token }: ProjectListProps) => {
     file: null,
     portfolioImages: [],
   });
+
+  // Function to clean and normalize HTML content
+  const cleanHTML = (html: string): string => {
+    if (!html) return '';
+    
+    // Remove nested tags and normalize structure
+    let cleanedHTML = html
+      // Remove nested heading tags (like h1 inside h1)
+      .replace(/<h([1-6])>\s*<h[1-6][^>]*>/g, '<h$1>')
+      .replace(/<\/h[1-6]>\s*<\/h[1-6]>/g, '</h$1>')
+      
+      // Fix nested headings with divs/spans
+      .replace(/<h([1-6])>\s*<div[^>]*>\s*<span[^>]*>/g, '<h$1>')
+      .replace(/<\/span>\s*<\/div>\s*<\/h[1-6]>\s*<\/h[1-6]>/g, '</h$1>')
+      
+      // Convert divs/spans with heading font-sizes back to paragraphs when "Normal" is selected
+      .replace(/<div[^>]*>\s*<span[^>]*style="[^"]*font-size:\s*1\.875em[^"]*"[^>]*>([^<]+)<\/span>\s*<\/div>/g, '<p>$1</p>')
+      .replace(/<div[^>]*>\s*<span[^>]*style="[^"]*font-size:\s*1\.5em[^"]*"[^>]*>([^<]+)<\/span>\s*<\/div>/g, '<p>$1</p>')
+      .replace(/<div[^>]*>\s*<span[^>]*style="[^"]*font-size:\s*1\.25em[^"]*"[^>]*>([^<]+)<\/span>\s*<\/div>/g, '<p>$1</p>')
+      .replace(/<div[^>]*>\s*<span[^>]*style="[^"]*font-size:\s*1\.125em[^"]*"[^>]*>([^<]+)<\/span>\s*<\/div>/g, '<p>$1</p>')
+      .replace(/<div[^>]*>\s*<span[^>]*style="[^"]*font-size:\s*1\.0625em[^"]*"[^>]*>([^<]+)<\/span>\s*<\/div>/g, '<p>$1</p>')
+      
+      // Remove font-size styles from spans when they should be normal
+      .replace(/(<span[^>]*style="[^"]*?)font-size:\s*[\d.]+em;?\s*([^"]*"[^>]*>)/g, '$1$2')
+      .replace(/(<div[^>]*style="[^"]*?)font-size:\s*[\d.]+em;?\s*([^"]*"[^>]*>)/g, '$1$2')
+      
+      // Clean up empty style attributes
+      .replace(/\s*style=""\s*/g, ' ')
+      .replace(/\s*style=";\s*"/g, ' ')
+      .replace(/\s*style="\s*"/g, ' ')
+      
+      // Remove empty nested divs and spans
+      .replace(/<div[^>]*>\s*<\/div>/g, '')
+      .replace(/<span[^>]*>\s*<\/span>/g, '')
+      
+      // Clean up divs with only styling that should be paragraphs
+      .replace(/<div[^>]*style="[^"]*"[^>]*>([^<]+)<\/div>/g, '<p>$1</p>')
+      .replace(/<div[^>]*>([^<]+)<\/div>/g, '<p>$1</p>')
+      
+      // Convert spans with no meaningful styling to plain text
+      .replace(/<span[^>]*style="font-weight:\s*normal[^"]*"[^>]*>([^<]+)<\/span>/g, '$1')
+      .replace(/<span[^>]*style="color:\s*inherit[^"]*"[^>]*>([^<]+)<\/span>/g, '$1')
+      .replace(/<span[^>]*style="font-family:\s*inherit[^"]*"[^>]*>([^<]+)<\/span>/g, '$1')
+      
+      // Remove nested p tags
+      .replace(/<p>\s*<p>/g, '<p>')
+      .replace(/<\/p>\s*<\/p>/g, '</p>')
+      
+      // Clean up multiple line breaks
+      .replace(/(<br\s*\/?>){3,}/g, '<br><br>')
+      
+      // Remove empty paragraphs
+      .replace(/<p>\s*(&nbsp;|\s)*\s*<\/p>/g, '')
+      
+      // Remove extra whitespace and normalize
+      .replace(/\s+/g, ' ')
+      .replace(/>\s+</g, '><')
+      .trim();
+
+    return cleanedHTML;
+  };
+
+  // Enhanced onChange handler with HTML cleaning
+  const handleDescriptionChange = (e: any) => {
+    const htmlContent = e.target.value;
+    let cleanedContent = cleanHTML(htmlContent);
+    
+    // Additional aggressive cleaning for stubborn inline styles
+    cleanedContent = cleanedContent
+      // Convert any div/span with large font-size to paragraph
+      .replace(/<div[^>]*>\s*<span[^>]*style="[^"]*font-size:\s*(1\.[5-9]\d*|[2-9]\.?\d*)em[^"]*"[^>]*>([^<]*)<\/span>\s*<\/div>/g, '<p>$2</p>')
+      // Remove font-size from any remaining spans/divs that should be normal
+      .replace(/(<(?:div|span)[^>]*style="[^"]*?)font-size:\s*[\d.]+em;?\s*([^"]*")/g, '$1$2')
+      .replace(/style="[^"]*font-family:\s*inherit[^"]*"/g, '')
+      .replace(/style="[^"]*font-weight:\s*normal[^"]*"/g, '')
+      .replace(/style="[^"]*color:\s*inherit[^"]*"/g, '')
+      // Clean up empty or meaningless style attributes
+      .replace(/\s*style=""\s*/g, ' ')
+      .replace(/\s*style=";\s*"\s*/g, ' ')
+      .replace(/\s*style="\s*;\s*"\s*/g, ' ')
+      // Convert remaining styled divs to paragraphs
+      .replace(/<div[^>]*>([^<]+)<\/div>/g, '<p>$1</p>');
+    
+    setFormData((prev) => ({ 
+      ...prev, 
+      description: cleanedContent
+    }));
+  };
+
+  // Function to clear all formatting and convert to plain text paragraphs
+  const clearFormatting = () => {
+    const plainText = formData.description
+      .replace(/<[^>]*>/g, ' ') // Remove all HTML tags
+      .replace(/\s+/g, ' ') // Normalize whitespace
+      .trim()
+      .split('\n') // Split by line breaks
+      .filter(line => line.trim()) // Remove empty lines
+      .map(line => `<p>${line.trim()}</p>`) // Wrap each line in paragraph
+      .join('');
+
+    setFormData((prev) => ({ 
+      ...prev, 
+      description: plainText || '<p></p>'
+    }));
+  };
+
+  // Function to specifically handle converting current selection to normal text
+  const convertToNormal = () => {
+    let normalizedContent = formData.description
+      // Convert any div/span with inline styles to normal paragraphs
+      .replace(/<div[^>]*>([^<]+)<\/div>/g, '<p>$1</p>')
+      .replace(/<span[^>]*>([^<]+)<\/span>/g, '$1')
+      // Remove all inline styles
+      .replace(/\s*style="[^"]*"/g, '')
+      // Clean up any remaining formatting
+      .replace(/<(h[1-6])[^>]*>([^<]+)<\/\1>/g, '<p>$2</p>');
+    
+    normalizedContent = cleanHTML(normalizedContent);
+    
+    setFormData((prev) => ({ 
+      ...prev, 
+      description: normalizedContent
+    }));
+  };
   
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [portfolioPreviewUrls, setPortfolioPreviewUrls] = useState<string[]>([]);
@@ -321,7 +447,46 @@ export const ProjectList = ({ category, onBack, token }: ProjectListProps) => {
                   }
                 />
 
-                <TextAreaGroup
+                <div className="mb-4">
+                  <div className="flex items-center justify-between mb-2.5">
+                    <label className="block text-black dark:text-white">
+                      Description <span className="text-meta-1">*</span>
+                    </label>
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        onClick={convertToNormal}
+                        className="text-xs px-3 py-1 bg-blue-100 dark:bg-blue-700 text-blue-600 dark:text-blue-300 rounded hover:bg-blue-200 dark:hover:bg-blue-600 transition-colors"
+                        title="Convert selected text to normal paragraphs"
+                      >
+                        To Normal
+                      </button>
+                      <button
+                        type="button"
+                        onClick={clearFormatting}
+                        className="text-xs px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                        title="Clear all formatting and convert to plain text"
+                      >
+                        Clear All
+                      </button>
+                    </div>
+                  </div>
+                  <div className="rich-text-editor-container">
+                    <Editor 
+                      ref={editorRef}
+                      value={formData.description} 
+                      onChange={handleDescriptionChange}
+                      containerProps={{
+                        style: {
+                          resize: 'vertical',
+                          minHeight: '200px'
+                        }
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* <TextAreaGroup
                   label="Description"
                   placeholder="Enter project description"
                   required
@@ -332,7 +497,7 @@ export const ProjectList = ({ category, onBack, token }: ProjectListProps) => {
                       description: e.target.value,
                     }))
                   }
-                />
+                /> */}
 
                 <InputGroup
                   label="Location"
@@ -514,9 +679,11 @@ export const ProjectList = ({ category, onBack, token }: ProjectListProps) => {
                 <h3 className="text-xl font-semibold text-black dark:text-white">
                   {project.title}
                 </h3>
-                <p className="mt-2 line-clamp-2 text-gray-600 dark:text-gray-400">
-                  {project.description}
-                </p>
+                <div 
+                  className="mt-2 line-clamp-2 text-gray-600 dark:text-gray-400 prose-admin max-w-none"
+                  dangerouslySetInnerHTML={{ __html: project.description }}
+                />
+              
                 <div className="mt-4 flex items-center justify-between">
                   <span
                     className={`rounded-full px-3 py-1 text-sm ${
