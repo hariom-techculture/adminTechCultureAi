@@ -682,7 +682,7 @@ export const ProjectList = ({ category, onBack, token }: ProjectListProps) => {
                 <div 
                   className="mt-2 line-clamp-2 text-gray-600 dark:text-gray-400 prose-admin max-w-none"
                   dangerouslySetInnerHTML={{ __html: project.description }}
-                />
+                ></div>
               
                 <div className="mt-4 flex items-center justify-between">
                   <span
