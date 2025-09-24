@@ -8,6 +8,10 @@ export interface Service {
   order?: number;
   showOnHomePage?: boolean;
   createdAt: string;
+  updatedAt: string;
+  slug: string;
+  sliderImage?: string[];
+  showOnHeader?: boolean;
 }
 
 export interface ServiceFormData {
@@ -16,4 +20,8 @@ export interface ServiceFormData {
   category: string;
   features: string[];
   file: File | null;
+  sliderImage: File[] | null;
+  order?: number;
+  showOnHomePage?: boolean;
+  showOnHeader?: boolean;
 }

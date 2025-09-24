@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "react-hot-toast";
@@ -9,6 +9,7 @@ import { Service } from "@/types/service";
 import Image from "next/image";
 import { TextAreaGroup } from "@/components/FormElements/InputGroup/text-area";
 import InputGroup from "@/components/FormElements/InputGroup";
+import Editor from "react-simple-wysiwyg";
 
 export default function ServicesPage() {
   const { token } = useAuth();
@@ -16,14 +17,16 @@ export default function ServicesPage() {
   const [loading, setLoading] = useState(true);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingService, setEditingService] = useState<Service | null>(null);
-  
+  const [isDragging, setIsDragging] = useState(false);
+
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalServices, setTotalServices] = useState(0);
   const [hasMore, setHasMore] = useState(false);
   const servicesPerPage = 9;
-  
+  const editorRef = useRef<any>(null);
+
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -53,7 +56,7 @@ export default function ServicesPage() {
       );
       if (!response.ok) throw new Error("Failed to fetch services");
       const data = await response.json();
-      
+
       setServices(data.services || []);
       setCurrentPage(data.pagination?.currentPage || 1);
       setTotalPages(data.pagination?.totalPages || 1);
@@ -121,11 +124,11 @@ export default function ServicesPage() {
         });
 
         if (!response.ok) throw new Error("Failed to save service");
-        
+
         // If creating a new service, go to page 1 to see it
         const pageToFetch = editingService ? currentPage : 1;
         if (!editingService) setCurrentPage(1);
-        
+
         await fetchServices(pageToFetch);
         resetForm();
         resolve(true);
@@ -209,6 +212,149 @@ export default function ServicesPage() {
     }
   };
 
+  const cleanHTML = (html: string): string => {
+    if (!html) return "";
+
+    // Remove nested tags and normalize structure
+    let cleanedHTML = html
+      // Remove nested heading tags (like h1 inside h1)
+      .replace(/<h([1-6])>\s*<h[1-6][^>]*>/g, "<h$1>")
+      .replace(/<\/h[1-6]>\s*<\/h[1-6]>/g, "</h$1>")
+
+      // Fix nested headings with divs/spans
+      .replace(/<h([1-6])>\s*<div[^>]*>\s*<span[^>]*>/g, "<h$1>")
+      .replace(/<\/span>\s*<\/div>\s*<\/h[1-6]>\s*<\/h[1-6]>/g, "</h$1>")
+
+      // Convert divs/spans with heading font-sizes back to paragraphs when "Normal" is selected
+      .replace(
+        /<div[^>]*>\s*<span[^>]*style="[^"]*font-size:\s*1\.875em[^"]*"[^>]*>([^<]+)<\/span>\s*<\/div>/g,
+        "<p>$1</p>",
+      )
+      .replace(
+        /<div[^>]*>\s*<span[^>]*style="[^"]*font-size:\s*1\.5em[^"]*"[^>]*>([^<]+)<\/span>\s*<\/div>/g,
+        "<p>$1</p>",
+      )
+      .replace(
+        /<div[^>]*>\s*<span[^>]*style="[^"]*font-size:\s*1\.25em[^"]*"[^>]*>([^<]+)<\/span>\s*<\/div>/g,
+        "<p>$1</p>",
+      )
+      .replace(
+        /<div[^>]*>\s*<span[^>]*style="[^"]*font-size:\s*1\.125em[^"]*"[^>]*>([^<]+)<\/span>\s*<\/div>/g,
+        "<p>$1</p>",
+      )
+      .replace(
+        /<div[^>]*>\s*<span[^>]*style="[^"]*font-size:\s*1\.0625em[^"]*"[^>]*>([^<]+)<\/span>\s*<\/div>/g,
+        "<p>$1</p>",
+      )
+
+      // Remove font-size styles from spans when they should be normal
+      .replace(
+        /(<span[^>]*style="[^"]*?)font-size:\s*[\d.]+em;?\s*([^"]*"[^>]*>)/g,
+        "$1$2",
+      )
+      .replace(
+        /(<div[^>]*style="[^"]*?)font-size:\s*[\d.]+em;?\s*([^"]*"[^>]*>)/g,
+        "$1$2",
+      )
+
+      // Clean up empty style attributes
+      .replace(/\s*style=""\s*/g, " ")
+      .replace(/\s*style=";\s*"/g, " ")
+      .replace(/\s*style="\s*"/g, " ")
+
+      // Remove empty nested divs and spans
+      .replace(/<div[^>]*>\s*<\/div>/g, "")
+      .replace(/<span[^>]*>\s*<\/span>/g, "")
+
+      // Clean up divs with only styling that should be paragraphs
+      .replace(/<div[^>]*style="[^"]*"[^>]*>([^<]+)<\/div>/g, "<p>$1</p>")
+      .replace(/<div[^>]*>([^<]+)<\/div>/g, "<p>$1</p>")
+
+      // Convert spans with no meaningful styling to plain text
+      .replace(
+        /<span[^>]*style="font-weight:\s*normal[^"]*"[^>]*>([^<]+)<\/span>/g,
+        "$1",
+      )
+      .replace(
+        /<span[^>]*style="color:\s*inherit[^"]*"[^>]*>([^<]+)<\/span>/g,
+        "$1",
+      )
+      .replace(
+        /<span[^>]*style="font-family:\s*inherit[^"]*"[^>]*>([^<]+)<\/span>/g,
+        "$1",
+      )
+
+      // Remove nested p tags
+      .replace(/<p>\s*<p>/g, "<p>")
+      .replace(/<\/p>\s*<\/p>/g, "</p>")
+
+      // Clean up multiple line breaks
+      .replace(/(<br\s*\/?>){3,}/g, "<br><br>")
+
+      // Remove empty paragraphs
+      .replace(/<p>\s*(&nbsp;|\s)*\s*<\/p>/g, "")
+
+      // Remove extra whitespace and normalize
+      .replace(/\s+/g, " ")
+      .replace(/>\s+</g, "><")
+      .trim();
+
+    return cleanedHTML;
+  };
+
+  const handleDescriptionChange = (e: any) => {
+    const htmlContent = e.target.value;
+    let cleanedContent = cleanHTML(htmlContent);
+
+    // Additional aggressive cleaning for stubborn inline styles
+    cleanedContent = cleanedContent
+      // Convert any div/span with large font-size to paragraph
+      .replace(
+        /<div[^>]*>\s*<span[^>]*style="[^"]*font-size:\s*(1\.[5-9]\d*|[2-9]\.?\d*)em[^"]*"[^>]*>([^<]*)<\/span>\s*<\/div>/g,
+        "<p>$2</p>",
+      )
+      // Remove font-size from any remaining spans/divs that should be normal
+      .replace(
+        /(<(?:div|span)[^>]*style="[^"]*?)font-size:\s*[\d.]+em;?\s*([^"]*")/g,
+        "$1$2",
+      )
+      .replace(/style="[^"]*font-family:\s*inherit[^"]*"/g, "")
+      .replace(/style="[^"]*font-weight:\s*normal[^"]*"/g, "")
+      .replace(/style="[^"]*color:\s*inherit[^"]*"/g, "")
+      // Clean up empty or meaningless style attributes
+      .replace(/\s*style=""\s*/g, " ")
+      .replace(/\s*style=";\s*"\s*/g, " ")
+      .replace(/\s*style="\s*;\s*"\s*/g, " ")
+      // Convert remaining styled divs to paragraphs
+      .replace(/<div[^>]*>([^<]+)<\/div>/g, "<p>$1</p>");
+
+    setFormData((prev) => ({
+      ...prev,
+      description: cleanedContent,
+    }));
+  };
+
+  // Handle backdrop click with drag detection
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    if (!isDragging && e.target === e.currentTarget) {
+      resetForm();
+    }
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(false);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (e.buttons > 0) {
+      setIsDragging(true);
+    }
+  };
+
+  const handleMouseUp = (e: React.MouseEvent) => {
+    setTimeout(() => setIsDragging(false), 10);
+  };
+
   return (
     <>
       <Breadcrumb pageName="Services" />
@@ -233,16 +379,24 @@ export default function ServicesPage() {
               <div
                 className="fixed inset-0 z-[999] flex items-center justify-center bg-black bg-opacity-50 p-4"
                 style={{ zIndex: 9999 }}
-                onClick={(e) => {
-                  if (e.target === e.currentTarget) {
-                    resetForm();
-                  }
-                }}
+                onClick={handleBackdropClick}
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
               >
                 <div className="dark:bg-boxdark max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-6 shadow-2xl">
-                  <h3 className="mb-4 text-xl font-semibold text-black dark:text-white">
-                    {editingService ? "Edit Service" : "Add New Service"}
-                  </h3>
+                  <div className="mb-4 flex items-center justify-between">
+                    <h3 className="text-xl font-semibold text-black dark:text-white">
+                      {editingService ? "Edit Service" : "Add New Service"}
+                    </h3>
+                    <button
+                      onClick={resetForm}
+                      className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-gray-600 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-gray-600"
+                      type="button"
+                    >
+                      ×
+                    </button>
+                  </div>
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <InputGroup
                       label="Title"
@@ -258,7 +412,7 @@ export default function ServicesPage() {
                       }
                     />
 
-                    <TextAreaGroup
+                    {/* <TextAreaGroup
                       label="Description"
                       placeholder="Enter service description"
                       required
@@ -269,7 +423,20 @@ export default function ServicesPage() {
                           description: e.target.value,
                         }))
                       }
-                    />
+                    /> */}
+                    <div className="rich-text-editor-container">
+                      <Editor
+                        ref={editorRef}
+                        value={formData.description}
+                        onChange={handleDescriptionChange}
+                        containerProps={{
+                          style: {
+                            resize: "vertical",
+                            minHeight: "200px",
+                          },
+                        }}
+                      />
+                    </div>
 
                     <div className="space-y-2">
                       <label className="mb-3 block text-black dark:text-white">
@@ -284,7 +451,7 @@ export default function ServicesPage() {
                             category: e.target.value,
                           }))
                         }
-                        className="w-full rounded-lg border border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                        className="disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input w-full rounded-lg border border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default dark:text-white dark:focus:border-primary"
                       >
                         <option value="main">Main</option>
                         <option value="industry">Industry</option>
@@ -299,7 +466,7 @@ export default function ServicesPage() {
                       handleChange={(e) =>
                         setFormData((prev) => ({
                           ...prev,
-                          order: parseInt(e.target.value) ,
+                          order: parseInt(e.target.value),
                         }))
                       }
                     />
@@ -468,49 +635,58 @@ export default function ServicesPage() {
           {!loading && totalPages > 1 && (
             <div className="mt-8 flex items-center justify-between">
               <div className="text-sm text-gray-700 dark:text-gray-300">
-                Showing {((currentPage - 1) * servicesPerPage) + 1} to {Math.min(currentPage * servicesPerPage, totalServices)} of {totalServices} services
+                Showing {(currentPage - 1) * servicesPerPage + 1} to{" "}
+                {Math.min(currentPage * servicesPerPage, totalServices)} of{" "}
+                {totalServices} services
               </div>
-              
+
               <div className="flex items-center gap-2">
                 <button
-                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.max(prev - 1, 1))
+                  }
                   disabled={currentPage === 1}
                   className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
                 >
                   Previous
                 </button>
-                
+
                 <div className="flex items-center gap-1">
-                  {Array.from({ length: Math.min(5, totalPages) }, (_, index) => {
-                    let pageNum;
-                    if (totalPages <= 5) {
-                      pageNum = index + 1;
-                    } else if (currentPage <= 3) {
-                      pageNum = index + 1;
-                    } else if (currentPage >= totalPages - 2) {
-                      pageNum = totalPages - 4 + index;
-                    } else {
-                      pageNum = currentPage - 2 + index;
-                    }
-                    
-                    return (
-                      <button
-                        key={pageNum}
-                        onClick={() => setCurrentPage(pageNum)}
-                        className={`rounded-lg px-3 py-2 text-sm font-medium ${
-                          currentPage === pageNum
-                            ? 'bg-primary text-white'
-                            : 'border border-gray-300 text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700'
-                        }`}
-                      >
-                        {pageNum}
-                      </button>
-                    );
-                  })}
+                  {Array.from(
+                    { length: Math.min(5, totalPages) },
+                    (_, index) => {
+                      let pageNum;
+                      if (totalPages <= 5) {
+                        pageNum = index + 1;
+                      } else if (currentPage <= 3) {
+                        pageNum = index + 1;
+                      } else if (currentPage >= totalPages - 2) {
+                        pageNum = totalPages - 4 + index;
+                      } else {
+                        pageNum = currentPage - 2 + index;
+                      }
+
+                      return (
+                        <button
+                          key={pageNum}
+                          onClick={() => setCurrentPage(pageNum)}
+                          className={`rounded-lg px-3 py-2 text-sm font-medium ${
+                            currentPage === pageNum
+                              ? "bg-primary text-white"
+                              : "border border-gray-300 text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
+                          }`}
+                        >
+                          {pageNum}
+                        </button>
+                      );
+                    },
+                  )}
                 </div>
-                
+
                 <button
-                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                  }
                   disabled={currentPage === totalPages}
                   className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
                 >

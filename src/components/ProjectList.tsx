@@ -170,6 +170,7 @@ export const ProjectList = ({ category, onBack, token }: ProjectListProps) => {
   const [portfolioPreviewUrls, setPortfolioPreviewUrls] = useState<string[]>([]);
   const [existingPortfolioUrls, setExistingPortfolioUrls] = useState<string[]>([]);
   const [techInput, setTechInput] = useState('');
+  const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
@@ -379,6 +380,27 @@ export const ProjectList = ({ category, onBack, token }: ProjectListProps) => {
     setIsFormOpen(true);
   };
 
+  // Handle backdrop click with drag detection
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    if (!isDragging && e.target === e.currentTarget) {
+      resetForm();
+    }
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(false);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (e.buttons > 0) {
+      setIsDragging(true);
+    }
+  };
+
+  const handleMouseUp = (e: React.MouseEvent) => {
+    setTimeout(() => setIsDragging(false), 10);
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -422,16 +444,24 @@ export const ProjectList = ({ category, onBack, token }: ProjectListProps) => {
           <div
             className="fixed inset-0 z-[999] flex items-center justify-center bg-black bg-opacity-50 p-4"
             style={{ zIndex: 9999 }}
-            onClick={(e) => {
-              if (e.target === e.currentTarget) {
-                resetForm();
-              }
-            }}
+            onClick={handleBackdropClick}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
           >
             <div className="dark:bg-boxdark max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-6 shadow-2xl">
-              <h3 className="mb-4 text-xl font-semibold text-black dark:text-white">
-                {editingProject ? "Edit Project" : "Add New Project"}
-              </h3>
+              <div className="mb-4 flex items-center justify-between">
+                <h3 className="text-xl font-semibold text-black dark:text-white">
+                  {editingProject ? "Edit Project" : "Add New Project"}
+                </h3>
+                <button
+                  onClick={resetForm}
+                  className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-gray-600 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-gray-600"
+                  type="button"
+                >
+                  ×
+                </button>
+              </div>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <InputGroup
                   label="Title"
