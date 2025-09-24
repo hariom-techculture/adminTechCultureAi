@@ -155,7 +155,7 @@ export function TeamList({ onEdit }: TeamListProps) {
                           fill="none"
                           stroke="currentColor"
                           strokeWidth="2"
-                          stroke-linecap="round"
+                          strokeLinecap="round"
                           strokeLinejoin="round"
                           className="lucide lucide-linkedin-icon lucide-linkedin h-5 w-5"
                         >
@@ -173,7 +173,7 @@ export function TeamList({ onEdit }: TeamListProps) {
                           fill="none"
                           stroke="currentColor"
                           strokeWidth="2"
-                          stroke-linecap="round"
+                          strokeLinecap="round"
                           strokeLinejoin="round"
                           className="h-5 w-5"
                         >
@@ -189,7 +189,7 @@ export function TeamList({ onEdit }: TeamListProps) {
                           fill="none"
                           stroke="currentColor"
                           strokeWidth="2"
-                          stroke-linecap="round"
+                          strokeLinecap="round"
                           strokeLinejoin="round"
                           className="lucide lucide-instagram-icon lucide-instagram h-5 w-5"
                         >
