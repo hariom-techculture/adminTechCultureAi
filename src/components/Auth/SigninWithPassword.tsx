@@ -56,16 +56,16 @@ export default function SigninWithPassword() {
 
       const cookieData = {
         user: userData,
-        expiry: expirationDate.getTime()
+        // expiry: expirationDate.getTime()
       };
 
       // Set cookies with 1 day expiry
       const cookieExpiry = 1; // 1 day
       const maxAge = 60 * 60 * 24 * cookieExpiry; // 1 day in seconds
       
-      document.cookie = `token=${token}; path=/; max-age=${maxAge}`;
-      document.cookie = `user=${encodeURIComponent(JSON.stringify(cookieData))}; path=/; max-age=${maxAge}`;
-      document.cookie = `tokenExpiry=${expirationDate.getTime()}; path=/; max-age=${maxAge}`;
+      document.cookie = `token=${token}; path=/; `;
+      document.cookie = `user=${encodeURIComponent(JSON.stringify(cookieData))}; path=/; `;
+      // document.cookie = `tokenExpiry=${expirationDate.getTime()}; path=/; max-age=${maxAge}`;
 
       // Update auth context
       updateAuthUser(userData);

@@ -5,14 +5,14 @@ import type { NextRequest } from "next/server";
 function isAuthValid(request: NextRequest): boolean {
   const token = request.cookies.get("token")?.value;
   const userCookie = request.cookies.get("user")?.value;
-  const tokenExpiry = request.cookies.get("tokenExpiry")?.value;
+  // const tokenExpiry = request.cookies.get("tokenExpiry")?.value;
   
   // Must have all required cookies
-  if (!token || !userCookie || !tokenExpiry) return false;
+  if (!token || !userCookie ) return false;
   
   try {
     // Check token expiry from cookie
-    if (parseInt(tokenExpiry) < Date.now()) return false;
+    // if (parseInt(tokenExpiry) < Date.now()) return false;
     
     // Basic JWT structure check (header.payload.signature)
     const parts = token.split('.');
@@ -23,11 +23,11 @@ function isAuthValid(request: NextRequest): boolean {
     const currentTime = Math.floor(Date.now() / 1000);
     
     // Check if token is expired
-    if (payload.exp && payload.exp < currentTime) return false;
+    // if (payload.exp && payload.exp < currentTime) return false;
     
     // Validate user data
     const userData = JSON.parse(decodeURIComponent(userCookie));
-    if (!userData.user || (userData.expiry && userData.expiry < Date.now())) return false;
+    if (!userData.user) return false;
     
     return true;
   } catch (error) {
@@ -53,9 +53,9 @@ export function middleware(request: NextRequest) {
   // If auth data exists but is invalid, create response to clear the cookies
   if (token && !hasValidAuth && !isPublicPath) {
     const response = NextResponse.redirect(new URL("/auth/sign-in", request.url));
-    response.cookies.set("token", "", { expires: new Date(0), path: "/" });
-    response.cookies.set("user", "", { expires: new Date(0), path: "/" });
-    response.cookies.set("tokenExpiry", "", { expires: new Date(0), path: "/" });
+    response.cookies.set("token", "", {  path: "/" });
+    response.cookies.set("user", "", { path: "/" });
+    // response.cookies.set("tokenExpiry", "", { path: "/" });
     return response;
   }
 
@@ -72,9 +72,9 @@ export function middleware(request: NextRequest) {
     const response = NextResponse.redirect(redirectUrl);
     // Clear invalid cookies if they exist
     if (token) {
-      response.cookies.set("token", "", { expires: new Date(0), path: "/" });
-      response.cookies.set("user", "", { expires: new Date(0), path: "/" });
-      response.cookies.set("tokenExpiry", "", { expires: new Date(0), path: "/" });
+      response.cookies.set("token", "", { path: "/" });
+      response.cookies.set("user", "", { path: "/" });
+      // response.cookies.set("tokenExpiry", "", { path: "/" });
     }
     return response;
   }

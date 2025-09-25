@@ -31,21 +31,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   // Helper function to set cookie
-  const setCookie = (name: string, value: string, days: number = 1) => {
-    const expires = new Date();
-    expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
-    document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/`;
+  const setCookie = (name: string, value: string) => {
+    document.cookie = `${name}=${value}; path=/`;
   };
 
   // Helper function to delete cookie
   const deleteCookie = (name: string) => {
-    document.cookie = `${name}=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT; max-age=0`;
+    document.cookie = `${name}=; path=/;`;
   };
 
   const clearAllAuthData = () => {
     deleteCookie("token");
     deleteCookie("user");
-    deleteCookie("tokenExpiry");
   };
 
   const signOut = () => {
@@ -58,7 +55,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const checkAuthExpiration = () => {
     try {
       const token = getCookie("token");
-      const tokenExpiry = getCookie("tokenExpiry");
       const userCookie = getCookie("user");
       
       // If no token in cookies, clear everything
@@ -68,10 +64,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       // Check token expiration
-      if (tokenExpiry && parseInt(tokenExpiry) < Date.now()) {
-        signOut();
-        return false;
-      }
+      // if (tokenExpiry && parseInt(tokenExpiry) < Date.now()) {
+      //   signOut();
+      //   return false;
+      // }
 
       // Check user data
       if (!userCookie) {
@@ -82,10 +78,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       try {
         const userData = JSON.parse(decodeURIComponent(userCookie));
-        if (userData.expiry && userData.expiry < Date.now()) {
-          signOut();
-          return false;
-        }
+        // if (userData.expiry && userData.expiry < Date.now()) {
+        //   signOut();
+        //   return false;
+        // }
         
         // Update user state if not already set
         if (!userData.user) {
@@ -109,7 +105,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const initializeAuth = () => {
       const token = getCookie("token");
       const userCookie = getCookie("user");
-      const tokenExpiry = getCookie("tokenExpiry");
+      // const tokenExpiry = getCookie("tokenExpiry");
 
       // Check if we have both token and user data in cookies
       if (token && userCookie) {
