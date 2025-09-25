@@ -736,9 +736,10 @@ export default function ServicesPage() {
                     <h3 className="text-xl font-semibold text-black dark:text-white">
                       {service.title}
                     </h3>
-                    <p className="mt-2 line-clamp-2 text-gray-600 dark:text-gray-400">
-                      {service.description}
-                    </p>
+                    <div
+                      className="mt-2 line-clamp-2 text-gray-600 dark:text-gray-400 prose-admin max-w-none"
+                      dangerouslySetInnerHTML={{ __html: service.description }}
+                    ></div>
                     <div className="mt-3">
                       <h4 className="mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                         Features:
