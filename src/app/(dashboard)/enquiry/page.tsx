@@ -588,7 +588,7 @@ export default function EnquiryPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-4">
                         <div>
-                          <label className="mb-2 block text-sm font-medium text-black dark:text-white flex items-center gap-2">
+                          <label className="mb-2  text-sm font-medium text-black dark:text-white flex items-center gap-2">
                             <User className="h-4 w-4" />
                             Name
                           </label>
@@ -598,7 +598,7 @@ export default function EnquiryPage() {
                         </div>
 
                         <div>
-                          <label className="mb-2 block text-sm font-medium text-black dark:text-white flex items-center gap-2">
+                          <label className="mb-2  text-sm font-medium text-black dark:text-white flex items-center gap-2">
                             <Mail className="h-4 w-4" />
                             Email
                           </label>
@@ -608,7 +608,7 @@ export default function EnquiryPage() {
                         </div>
 
                         <div>
-                          <label className="mb-2 block text-sm font-medium text-black dark:text-white flex items-center gap-2">
+                          <label className="mb-2  text-sm font-medium text-black dark:text-white flex items-center gap-2">
                             <Phone className="h-4 w-4" />
                             Phone
                           </label>
@@ -620,7 +620,7 @@ export default function EnquiryPage() {
 
                       <div className="space-y-4">
                         <div>
-                          <label className="mb-2 block text-sm font-medium text-black dark:text-white flex items-center gap-2">
+                          <label className="mb-2  text-sm font-medium text-black dark:text-white flex items-center gap-2">
                             <Building className="h-4 w-4" />
                             Project Name
                           </label>
@@ -630,7 +630,7 @@ export default function EnquiryPage() {
                         </div>
 
                         <div>
-                          <label className="mb-2 block text-sm font-medium text-black dark:text-white flex items-center gap-2">
+                          <label className="mb-2  text-sm font-medium text-black dark:text-white flex items-center gap-2">
                             <MapPin className="h-4 w-4" />
                             Location
                           </label>
@@ -657,7 +657,7 @@ export default function EnquiryPage() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           {selectedContact.demoDate && selectedContact.demoTime && (
                             <div>
-                              <label className="mb-2 block text-sm font-medium text-black dark:text-white flex items-center gap-2">
+                              <label className="mb-2  text-sm font-medium text-black dark:text-white flex items-center gap-2">
                                 <Clock className="h-4 w-4" />
                                 Scheduled Date & Time
                               </label>
@@ -669,7 +669,7 @@ export default function EnquiryPage() {
 
                           {selectedContact.googleMeetLink && (
                             <div>
-                              <label className="mb-2 block text-sm font-medium text-black dark:text-white flex items-center gap-2">
+                              <label className="mb-2  text-sm font-medium text-black dark:text-white flex items-center gap-2">
                                 <Video className="h-4 w-4" />
                                 Google Meet
                               </label>
@@ -686,7 +686,7 @@ export default function EnquiryPage() {
 
                           {selectedContact.googleEventLink && (
                             <div>
-                              <label className="mb-2 block text-sm font-medium text-black dark:text-white flex items-center gap-2">
+                              <label className="mb-2  text-sm font-medium text-black dark:text-white flex items-center gap-2">
                                 <ExternalLink className="h-4 w-4" />
                                 Calendar Event
                               </label>
@@ -717,7 +717,7 @@ export default function EnquiryPage() {
 
                     {/* Message */}
                     <div>
-                      <label className="mb-2 block text-sm font-medium text-black dark:text-white flex items-center gap-2">
+                      <label className="mb-2  text-sm font-medium text-black dark:text-white flex items-center gap-2">
                         <MessageSquare className="h-4 w-4" />
                         Message
                       </label>
