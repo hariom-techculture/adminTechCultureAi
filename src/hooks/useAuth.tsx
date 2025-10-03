@@ -109,21 +109,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       // Check if we have both token and user data in cookies
       if (token && userCookie) {
-        // Check if token and user data are still valid
-        if (checkAuthExpiration()) {
-          try {
-            const userData = JSON.parse(decodeURIComponent(userCookie));
-            if (userData.user) {
-              setUser(userData.user);
-              setToken(token);
-            } else {
-              // Invalid user data structure
-              clearAllAuthData();
-            }
-          } catch (error) {
-            // Invalid JSON in cookie
+        try {
+          const userData = JSON.parse(decodeURIComponent(userCookie));
+          if (userData.user) {
+            setUser(userData.user);
+            setToken(token);
+          } else {
+            // Invalid user data structure
             clearAllAuthData();
           }
+        } catch (error) {
+          // Invalid JSON in cookie
+          clearAllAuthData();
         }
       } else {
         // If we don't have both token and user data, clear everything
@@ -133,15 +130,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     initializeAuth();
-
-    // Check expiration every minute
-    const expiryCheckInterval = setInterval(() => {
-      if (user && token) {
-        checkAuthExpiration();
-      }
-    }, 60000);
-
-    return () => clearInterval(expiryCheckInterval);
   }, [router]);
 
   // Show loading state only during initial auth check

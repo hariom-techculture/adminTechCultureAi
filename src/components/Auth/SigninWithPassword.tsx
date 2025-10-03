@@ -49,23 +49,17 @@ export default function SigninWithPassword() {
         throw new Error(result.message || "Failed to sign in");
       }
 
-      // Store user data and token in cookies only (1 day expiry)
+      // Store user data and token in persistent cookies (no expiration)
       const userData = result.user;
       const token = result.token;
-      const expirationDate = new Date(Date.now() + 24 * 60 * 60 * 1000); // Always 1 day
 
       const cookieData = {
-        user: userData,
-        // expiry: expirationDate.getTime()
+        user: userData
       };
 
-      // Set cookies with 1 day expiry
-      const cookieExpiry = 1; // 1 day
-      const maxAge = 60 * 60 * 24 * cookieExpiry; // 1 day in seconds
-      
-      document.cookie = `token=${token}; path=/; `;
-      document.cookie = `user=${encodeURIComponent(JSON.stringify(cookieData))}; path=/; `;
-      // document.cookie = `tokenExpiry=${expirationDate.getTime()}; path=/; max-age=${maxAge}`;
+      // Set persistent cookies with no expiration
+      document.cookie = `token=${token}; path=/; SameSite=Lax; Secure`;
+      document.cookie = `user=${encodeURIComponent(JSON.stringify(cookieData))}; path=/; SameSite=Lax; Secure`;
 
       // Update auth context
       updateAuthUser(userData);

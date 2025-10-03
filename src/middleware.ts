@@ -18,12 +18,8 @@ function isAuthValid(request: NextRequest): boolean {
     const parts = token.split('.');
     if (parts.length !== 3) return false;
     
-    // Decode payload to check expiration
+    // Basic validation - just check if payload exists and is valid JSON
     const payload = JSON.parse(atob(parts[1]));
-    const currentTime = Math.floor(Date.now() / 1000);
-    
-    // Check if token is expired
-    // if (payload.exp && payload.exp < currentTime) return false;
     
     // Validate user data
     const userData = JSON.parse(decodeURIComponent(userCookie));
