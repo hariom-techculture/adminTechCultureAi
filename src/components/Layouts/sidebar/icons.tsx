@@ -1,4 +1,3 @@
-import { Users } from "@/app/(dashboard)/(home)/_components/overview-cards/icons";
 import { Briefcase, Cpu, FileQuestionMark, FolderKanban, Headset, Image, MessageCircleCode, MessageCircleReply, Podcast, Settings, UsersRound } from "lucide-react";
 import { SVGProps } from "react";
 
@@ -238,4 +237,8 @@ export function faq(props: PropsType) {
 }
 export function subscriber(props: PropsType) {
   return <Podcast />;
+}
+
+export function leads(props: PropsType) {
+  return <UsersRound />;
 }
